@@ -115,6 +115,12 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .bnx:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
 .bnx:disabled{opacity:.28;cursor:default;}
 .qhint{font-size:.67rem;color:var(--muted2);text-align:center;margin-top:13px;}
+.q-ctx-btn{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);
+  font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:600;
+  padding:6px 14px;border-radius:20px;cursor:pointer;transition:all .15s;display:inline-flex;align-items:center;gap:5px;}
+.q-ctx-btn:hover{border-color:var(--accent);color:var(--accent);}
+.q-ctx-box{margin-top:10px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:12px 16px;font-size:.8rem;color:var(--muted);line-height:1.65;}
 
 /* REVEAL */
 #secReveal{background:var(--bg);}
@@ -149,8 +155,11 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
 .res-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 32px;margin-bottom:20px;box-shadow:0 2px 12px var(--shadow);position:relative;overflow:hidden;}
 .res-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-bg) 0%,transparent 65%);}
 .res-over{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;}
-.res-ideo-name{font-family:'Fraunces',serif;font-size:clamp(1.9rem,5vw,2.8rem);font-weight:700;letter-spacing:-.03em;color:var(--accent);font-style:italic;margin-bottom:12px;}
-.res-ideo-plain{font-size:1rem;color:var(--muted);line-height:1.7;max-width:640px;margin-bottom:20px;}
+.res-ideo-name{font-family:'Fraunces',serif;font-size:clamp(1.9rem,5vw,2.8rem);font-weight:700;letter-spacing:-.03em;color:var(--accent);font-style:italic;margin-bottom:10px;}
+.res-spectrum{display:inline-flex;align-items:center;gap:7px;font-size:.75rem;font-weight:700;color:var(--muted);margin-bottom:14px;padding:5px 12px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;}
+.res-spectrum::before{content:'📍';font-size:.8rem;}
+.res-ideo-plain{font-size:1rem;color:var(--muted);line-height:1.7;max-width:640px;margin-bottom:12px;}
+.res-plain-explain{font-size:.85rem;color:var(--muted);line-height:1.65;max-width:640px;padding:12px 16px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--border2);margin-bottom:16px;font-style:italic;}
 .res-mtag{display:inline-flex;align-items:center;font-size:.67rem;font-weight:700;padding:3px 10px;border-radius:10px;}
 .res-one-liner{font-size:1.05rem;font-weight:500;line-height:1.65;padding:16px 20px;border-radius:10px;background:var(--surface2);border-left:3px solid var(--accent);margin-top:16px;}
 
@@ -351,6 +360,10 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
     <div class="qnum" id="qNum"></div>
   </div>
   <div class="qtext" id="qText"></div>
+  <div class="q-context-row" id="qContextRow" style="display:none;margin-bottom:20px;">
+    <button class="q-ctx-btn" id="qCtxBtn" onclick="toggleCtx()">ⓘ <span id="qCtxBtnLabel">What is this about?</span></button>
+    <div class="q-ctx-box" id="qCtxBox" style="display:none"></div>
+  </div>
   <div class="shdr"><span>Strongly Agree</span><span>Strongly Disagree</span></div>
   <div class="srow">
     <button class="sopt" onclick="ans(0)"><div class="spip"></div>Strongly Agree</button>
@@ -388,7 +401,9 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-
   <div class="res-hero fu">
     <div class="res-over">Full Analysis</div>
     <div class="res-ideo-name" id="rIdeo"></div>
+    <div class="res-spectrum" id="rSpectrum"></div>
     <div class="res-ideo-plain" id="rIdeoDef"></div>
+    <div class="res-plain-explain" id="rPlainExplain"></div>
     <span class="res-mtag" id="rMtag"></span>
     <div class="res-one-liner" id="rOneLiner"></div>
   </div>
@@ -474,86 +489,175 @@ function toggleTheme(){
 
 // ══ QUESTIONS ══
 const AQ=[
-  {t:"Wealthy individuals and corporations should pay significantly higher taxes to fund public services.",a:"💰 Economic",x:"econ",d:1,tier:1},
-  {t:"Free markets, with minimal government interference, are the most reliable engine of prosperity.",a:"💰 Economic",x:"econ",d:-1,tier:1},
-  {t:"The government should provide universal healthcare as a public service.",a:"💰 Economic",x:"econ",d:1,tier:1},
-  {t:"Reducing business regulations creates more jobs and benefits the broader economy.",a:"💰 Economic",x:"econ",d:-1,tier:1},
-  {t:"A robust social safety net — housing, food, and income support — is a core government responsibility.",a:"💰 Economic",x:"econ",d:1,tier:2},
-  {t:"People are primarily responsible for their own financial situation, not the state.",a:"💰 Economic",x:"econ",d:-1,tier:2},
-  {t:"The government should actively work to close the wealth gap between the richest and poorest.",a:"💰 Economic",x:"econ",d:1,tier:2},
-  {t:"Lower taxes and less government spending generally lead to better economic outcomes.",a:"💰 Economic",x:"econ",d:-1,tier:2},
-  {t:"Workers' unions are essential for protecting employees from exploitation.",a:"💰 Economic",x:"econ",d:1,tier:2},
-  {t:"Competition between private companies drives innovation more effectively than government programs.",a:"💰 Economic",x:"econ",d:-1,tier:2},
-  {t:"Large corporations wield too much power and need stricter government oversight.",a:"💰 Economic",x:"econ",d:1,tier:3},
-  {t:"Inheritance allows families to build generational wealth and should largely remain untaxed.",a:"💰 Economic",x:"econ",d:-1,tier:3},
-  {t:"Public universities should be free or heavily subsidized by the government.",a:"💰 Economic",x:"econ",d:1,tier:3},
-  {t:"Minimum wage laws often reduce employment and do more harm than good.",a:"💰 Economic",x:"econ",d:-1,tier:3},
-  {t:"The government should take an active role in developing key industries and infrastructure.",a:"💰 Economic",x:"econ",d:1,tier:3},
-  {t:"Economic inequality is a natural outcome of a free society and not inherently unjust.",a:"💰 Economic",x:"econ",d:-1,tier:3},
-  {t:"The government has too much control over how people live their private lives.",a:"🏛 Social",x:"social",d:1,tier:1},
-  {t:"Traditional social structures — family, religion, community norms — provide essential stability.",a:"🏛 Social",x:"social",d:-1,tier:1},
-  {t:"Drug use between consenting adults should not be criminalized.",a:"🏛 Social",x:"social",d:1,tier:1},
-  {t:"Maintaining public order sometimes requires authorities to use significant force.",a:"🏛 Social",x:"social",d:-1,tier:1},
-  {t:"People should be free to live however they choose, as long as they don't directly harm others.",a:"🏛 Social",x:"social",d:1,tier:2},
-  {t:"Stricter policing and longer sentences are effective tools for reducing crime.",a:"🏛 Social",x:"social",d:-1,tier:2},
-  {t:"Society progresses most when citizens question and reform existing authority structures.",a:"🏛 Social",x:"social",d:1,tier:2},
-  {t:"Respect for authority and social hierarchy is a virtue that holds communities together.",a:"🏛 Social",x:"social",d:-1,tier:2},
-  {t:"Sex work between consenting adults should be legal and regulated.",a:"🏛 Social",x:"social",d:1,tier:2},
-  {t:"A strong central government is often necessary to solve society's major challenges.",a:"🏛 Social",x:"social",d:-1,tier:2},
-  {t:"Peaceful protests that disrupt daily life are a legitimate form of political expression.",a:"🏛 Social",x:"social",d:1,tier:3},
-  {t:"National security concerns should generally take precedence over most other policy areas.",a:"🏛 Social",x:"social",d:-1,tier:3},
-  {t:"Religious institutions should have no special influence over government policy.",a:"🏛 Social",x:"social",d:1,tier:3},
-  {t:"Children should be taught to respect authority figures before learning to question them.",a:"🏛 Social",x:"social",d:-1,tier:3},
-  {t:"The state should not define what constitutes a family or an acceptable relationship structure.",a:"🏛 Social",x:"social",d:1,tier:3},
-  {t:"Social stability is more important than rapidly expanding individual freedoms.",a:"🏛 Social",x:"social",d:-1,tier:3},
-  {t:"Government mass surveillance programs are a serious threat to a free society.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:1},
-  {t:"In genuine national emergencies, temporary restrictions on civil liberties can be justified.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:1},
-  {t:"The rights of accused individuals should be strongly protected throughout the justice process.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:1},
-  {t:"Governments should be able to detain terrorism suspects without a full trial.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:1},
-  {t:"Privacy from government intrusion is a fundamental right that should rarely be compromised.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2},
-  {t:"Laws restricting hate speech are necessary to protect vulnerable communities from harm.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2},
-  {t:"A free press, even one critical of the government, is essential to democracy.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2},
-  {t:"Mandatory health interventions can be justified to protect public health.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2},
-  {t:"People should have the right to encrypt their communications without government access.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2},
-  {t:"The government should be allowed to monitor social media to identify potential threats.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2},
-  {t:"Whistleblowers who expose government wrongdoing should be legally protected.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3},
-  {t:"In serious criminal cases, coercive interrogation techniques can sometimes be justified.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3},
-  {t:"Citizens should be able to access all non-classified government information on request.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3},
-  {t:"Public safety sometimes outweighs the rights of individual suspects.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3},
-  {t:"The right to protest, even disruptively, must be robustly protected.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3},
-  {t:"Platforms and media companies can reasonably restrict speech that promotes harm.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3},
-  {t:"International institutions like the UN are vital for a stable and fair global order.",a:"🌍 Governance",x:"gov",d:1,tier:1},
-  {t:"Countries should prioritize their own citizens' interests above international obligations.",a:"🌍 Governance",x:"gov",d:-1,tier:1},
-  {t:"Immigration overall benefits host countries economically and culturally.",a:"🌍 Governance",x:"gov",d:1,tier:1},
-  {t:"Controlling borders and limiting immigration is essential for protecting national identity.",a:"🌍 Governance",x:"gov",d:-1,tier:1},
-  {t:"Addressing climate change requires global cooperation, even if it limits national sovereignty.",a:"🌍 Governance",x:"gov",d:1,tier:2},
-  {t:"Global trade agreements often undermine domestic workers and national industries.",a:"🌍 Governance",x:"gov",d:-1,tier:2},
-  {t:"Countries have a responsibility to accept refugees fleeing war and persecution.",a:"🌍 Governance",x:"gov",d:1,tier:2},
-  {t:"A country's military should serve national interests, not international ones.",a:"🌍 Governance",x:"gov",d:-1,tier:2},
-  {t:"Cultural diversity, including from immigration, generally strengthens societies.",a:"🌍 Governance",x:"gov",d:1,tier:2},
-  {t:"Preserving a nation's distinct cultural identity is a legitimate and important government goal.",a:"🌍 Governance",x:"gov",d:-1,tier:2},
-  {t:"Wealthy nations have a moral obligation to provide substantial foreign aid to poorer ones.",a:"🌍 Governance",x:"gov",d:1,tier:3},
-  {t:"Nations that prioritize their own growth benefit the world more than those sacrificing it for global agreements.",a:"🌍 Governance",x:"gov",d:-1,tier:3},
-  {t:"Multinational corporations should be subject to binding international regulations.",a:"🌍 Governance",x:"gov",d:1,tier:3},
-  {t:"National sovereignty should be respected above international law in most cases.",a:"🌍 Governance",x:"gov",d:-1,tier:3},
-  {t:"A world with fewer borders and more freedom of movement would be better for humanity.",a:"🌍 Governance",x:"gov",d:1,tier:3},
-  {t:"National pride and patriotism are important forces that bind societies together.",a:"🌍 Governance",x:"gov",d:-1,tier:3},
-  {t:"Elections in democratic countries generally reflect the genuine will of the people.",a:"🔎 System Trust",x:"system",d:1,tier:1},
-  {t:"Mainstream media outlets are fundamentally biased and cannot be trusted to report fairly.",a:"🔎 System Trust",x:"system",d:-1,tier:1},
-  {t:"Scientific consensus on major issues should guide public policy.",a:"🔎 System Trust",x:"system",d:1,tier:1},
-  {t:"Most politicians, regardless of party, primarily serve the interests of the wealthy and powerful.",a:"🔎 System Trust",x:"system",d:-1,tier:1},
-  {t:"Courts and the legal system, despite imperfections, broadly deliver justice.",a:"🔎 System Trust",x:"system",d:1,tier:2},
-  {t:"Large corporations and governments work together to control information the public receives.",a:"🔎 System Trust",x:"system",d:-1,tier:2},
-  {t:"Experts and professional institutions generally give reliable guidance on complex issues.",a:"🔎 System Trust",x:"system",d:1,tier:2},
-  {t:"The 'deep state' — the idea that unelected officials secretly run policy regardless of elected leaders — is a real and serious problem.",a:"🔎 System Trust",x:"system",d:-1,tier:2},
-  {t:"Civil society organizations — like the Red Cross, Amnesty International, or local advocacy groups — are a healthy part of democracy.",a:"🔎 System Trust",x:"system",d:1,tier:2},
-  {t:"Official government statistics are routinely manipulated to serve political agendas.",a:"🔎 System Trust",x:"system",d:-1,tier:2},
-  {t:"Universities and academic institutions are broadly trustworthy sources of knowledge.",a:"🔎 System Trust",x:"system",d:1,tier:3},
-  {t:"Voting in elections rarely produces meaningful change for ordinary people.",a:"🔎 System Trust",x:"system",d:-1,tier:3},
-  {t:"International health organizations like the WHO (World Health Organization) generally act in the public interest.",a:"🔎 System Trust",x:"system",d:1,tier:3},
-  {t:"Financial systems are rigged to benefit those already wealthy at the expense of everyone else.",a:"🔎 System Trust",x:"system",d:-1,tier:3},
-  {t:"Police and law enforcement generally operate in good faith to protect communities.",a:"🔎 System Trust",x:"system",d:1,tier:3},
-  {t:"The political system is so broken that real change requires working entirely outside of it.",a:"🔎 System Trust",x:"system",d:-1,tier:3},
+  // ── ECONOMIC (16) ──
+  {t:"When a company's profits rise sharply, the gains should primarily go back to workers through higher wages rather than to shareholders.",a:"💰 Economic",x:"econ",d:1,tier:1,
+   ctx:"This is about who benefits when a business does well — employees or investors. It touches on debates about wages, dividends, and how wealth flows in the economy."},
+  {t:"A business owner who builds a successful company from scratch has earned the right to pass it on to their children without the government taking a large portion.",a:"💰 Economic",x:"econ",d:-1,tier:1,
+   ctx:"This is about inheritance and estate taxes. Some argue inherited wealth was already taxed once; others say untaxed inheritance compounds inequality across generations."},
+  {t:"Someone who works full-time at any job should be able to afford rent, food, and basic healthcare without needing government assistance.",a:"💰 Economic",x:"econ",d:1,tier:1,
+   ctx:"This asks whether the minimum wage and labor market produce adequate living standards on their own, or whether government support is structurally necessary even for working people."},
+  {t:"When government adds rules that businesses must follow, it usually causes more economic harm than the benefits it provides.",a:"💰 Economic",x:"econ",d:-1,tier:1,
+   ctx:"Business regulation includes environmental rules, safety standards, financial oversight, and labor laws. The debate is whether these protect people or slow growth and raise costs."},
+  {t:"The gap between what a typical CEO earns and what the average worker at the same company earns has grown too large and is bad for society.",a:"💰 Economic",x:"econ",d:1,tier:2,
+   ctx:"CEO-to-worker pay ratios have grown from about 20:1 in 1965 to over 300:1 today. This asks whether that gap reflects merit or a broken system — and whether it matters."},
+  {t:"If someone works hard but still cannot get ahead financially, the most honest explanation is usually that the system makes it difficult — not that they aren't trying.",a:"💰 Economic",x:"econ",d:1,tier:2,
+   ctx:"This is about whether economic struggle is primarily caused by individual choices or structural factors like wage levels, housing costs, healthcare, and inherited advantages."},
+  {t:"Reducing taxes on high earners and corporations tends to benefit the broader economy, not just the people who pay those taxes.",a:"💰 Economic",x:"econ",d:-1,tier:2,
+   ctx:"This refers to 'trickle-down economics' — the idea that lower taxes on high earners stimulates investment and job creation. Critics say the gains mostly remain at the top."},
+  {t:"A company should be free to pay workers whatever both sides agree to, without the government setting a mandatory minimum wage.",a:"💰 Economic",x:"econ",d:-1,tier:2,
+   ctx:"Minimum wage opponents say it distorts the labor market and costs jobs. Supporters say workers often lack bargaining power and minimum wages protect them from exploitation."},
+  {t:"When workers organize collectively to negotiate pay and conditions, it makes the economy more fair without necessarily making it less efficient.",a:"💰 Economic",x:"econ",d:1,tier:2,
+   ctx:"This is about labor unions. Debates center on whether unions protect workers from corporate power, or drive up costs, reduce flexibility, and harm non-union workers."},
+  {t:"If one company dominates its entire industry and has crushed competitors, it has most likely just done a better job — that's competition working correctly.",a:"💰 Economic",x:"econ",d:-1,tier:2,
+   ctx:"This touches on antitrust law. Should government break up dominant companies like Amazon, Google, or Meta? Or should market forces decide who wins and loses?"},
+  {t:"Higher education should be affordable enough that no student who qualifies academically needs to take on significant debt to attend.",a:"💰 Economic",x:"econ",d:1,tier:3,
+   ctx:"The US has some of the highest university tuition in the world. This asks whether higher education should be treated as a public good (like K-12 schooling) or a market service."},
+  {t:"The possibility of becoming very wealthy is one of the most important forces driving innovation, hard work, and economic progress.",a:"💰 Economic",x:"econ",d:-1,tier:3,
+   ctx:"This is about whether large financial rewards are a necessary incentive for the risk-taking and effort that creates new businesses and technologies."},
+  {t:"When private companies can deliver a public service cheaper and better than government, they should do so — even for things like prisons, schools, or utilities.",a:"💰 Economic",x:"econ",d:-1,tier:3,
+   ctx:"Privatization moves public services to private management. Critics say profit motives distort services like healthcare, prisons, and water. Supporters say competition drives efficiency."},
+  {t:"Government should invest directly in building renewable energy infrastructure rather than relying on market incentives alone to shift the economy.",a:"💰 Economic",x:"econ",d:1,tier:3,
+   ctx:"This is about industrial policy — whether government should actively build out solar, wind, and grid infrastructure, or leave the energy transition to private investment and market signals."},
+  {t:"An economy that produces extreme wealth at the top while many people cannot afford basic necessities is not functioning as it should.",a:"💰 Economic",x:"econ",d:1,tier:3,
+   ctx:"This asks whether extreme inequality at the top coexists with — or contributes to — hardship at the bottom, and whether that gap reflects economic failure or natural market outcomes."},
+  {t:"Environmental regulations, on balance, cost consumers and workers more than the protections they provide are worth.",a:"💰 Economic",x:"econ",d:-1,tier:3,
+   ctx:"Clean air, water, and emissions rules have real costs to businesses that can be passed on to consumers. The debate is whether health, environmental, and climate benefits outweigh those costs."},
+
+  // ── SOCIAL / AUTHORITY (16) ──
+  {t:"Adults who use substances that affect only themselves should face no criminal penalty — this should be treated as a health matter, not a criminal one.",a:"🏛 Social",x:"social",d:1,tier:1,
+   ctx:"Most Western countries criminalize drug use. Portugal decriminalized all drugs in 2001 and saw drug deaths and HIV infections fall. This asks where you stand on that general approach."},
+  {t:"A society functions better when most people share a common set of cultural values and traditions rather than each person defining their own.",a:"🏛 Social",x:"social",d:-1,tier:1,
+   ctx:"This is about cultural cohesion vs. pluralism — whether shared norms provide social stability, or whether diversity of values and lifestyles strengthens a society."},
+  {t:"The government should have no role in defining which adult relationships or family structures are officially recognized.",a:"🏛 Social",x:"social",d:1,tier:1,
+   ctx:"This broadly covers same-sex marriage, civil unions, and other relationship structures. It asks whether marriage and family are civil matters the state must treat equally, or things the state may define."},
+  {t:"Adding more police officers and toughening criminal sentences is a reliable way to reduce violent crime in cities.",a:"🏛 Social",x:"social",d:-1,tier:1,
+   ctx:"Research on whether more policing and harsher sentences reduce crime is mixed. Some studies show deterrence effects; others find poverty reduction and social investment more effective long-term."},
+  {t:"Protests that block traffic or disrupt businesses go too far — free expression does not give people the right to impose significant costs on others.",a:"🏛 Social",x:"social",d:-1,tier:2,
+   ctx:"Disruptive tactics like highway blockages and sit-ins have historically been used in civil rights movements. The question is whether disruption is a legitimate part of political speech."},
+  {t:"There are measurable, systemic differences in how the criminal justice system treats people of different races that are not fully explained by other factors.",a:"🏛 Social",x:"social",d:1,tier:2,
+   ctx:"Research shows racial disparities in stops, arrests, sentencing, and incarceration. The debate is whether this reflects systemic bias, socioeconomic factors, policing choices, or other causes."},
+  {t:"Religious institutions and faith communities play a valuable role in civic life and should be supported rather than pushed out of the public square.",a:"🏛 Social",x:"social",d:-1,tier:2,
+   ctx:"This is about the role of religion in public life. Some see religious organizations as vital social infrastructure; others argue separation of church and state means religion should remain private."},
+  {t:"Biological differences between males and females are significant enough that sex-specific categories in sports should be maintained as they traditionally have been.",a:"🏛 Social",x:"social",d:-1,tier:2,
+   ctx:"This debate involves transgender athletes competing in categories matching their gender identity. There is scientific disagreement about the degree to which transition affects athletic performance."},
+  {t:"Someone who reveals government secrets to expose clearly illegal or unconstitutional activity should be protected from prosecution.",a:"🏛 Social",x:"social",d:1,tier:2,
+   ctx:"This refers to whistleblowers like Edward Snowden (NSA surveillance) and Chelsea Manning (military documents). The question is whether exposing wrongdoing justifies breaking secrecy laws."},
+  {t:"Decisions about abortion access are appropriately made at the state level rather than by federal law or the Supreme Court.",a:"🏛 Social",x:"social",d:-1,tier:2,
+   ctx:"After the Supreme Court overturned Roe v. Wade in 2022, abortion law reverted to states. This asks whether state-level control is the correct arrangement, separate from your personal view on abortion."},
+  {t:"The difference in average earnings between men and women reflects ongoing workplace discrimination more than it reflects differences in career choices.",a:"🏛 Social",x:"social",d:1,tier:3,
+   ctx:"The raw pay gap is real (~18% on average). The debate is whether this reflects discrimination, or is mostly explained by differences in occupation, hours worked, and career interruptions for caregiving."},
+  {t:"Parents should have significant authority to raise their children according to their own religious and cultural beliefs, even when those beliefs conflict with what schools teach.",a:"🏛 Social",x:"social",d:-1,tier:3,
+   ctx:"This covers tensions around sex education, evolution, gender identity curriculum, and religious upbringing. It asks how much parental authority should override state educational standards."},
+  {t:"The state should not have the power to execute someone, given that no justice system is reliable enough to justify an irreversible punishment.",a:"🏛 Social",x:"social",d:1,tier:3,
+   ctx:"The US is one of the few wealthy democracies still using the death penalty. Since 1973, over 190 people on death row have been exonerated before execution. This asks whether that risk alone is disqualifying."},
+  {t:"People who have lived and worked in a country illegally for many years have still broken the law and should face legal consequences, even if their lives are now rooted there.",a:"🏛 Social",x:"social",d:-1,tier:3,
+   ctx:"About 11 million undocumented people live in the US, many for 10–20+ years with US-born children. This asks whether the law should be enforced regardless of how integrated someone has become."},
+  {t:"Using race or background as one factor in university admissions is a justified tool for correcting the lasting effects of historical discrimination.",a:"🏛 Social",x:"social",d:1,tier:3,
+   ctx:"The Supreme Court struck down race-based affirmative action in college admissions in 2023. This asks whether using race as a factor was fair compensation for historical injustice, or unfair to other applicants."},
+  {t:"High rates of gun ownership in the United States make the country less safe on balance, not more.",a:"🏛 Social",x:"social",d:1,tier:3,
+   ctx:"The US has the most civilian guns per capita of any country and significantly higher gun death rates than peer nations. The debate is whether guns primarily deter crime or primarily increase overall risk."},
+
+  // ── CIVIL LIBERTIES (16) ──
+  {t:"Before accessing someone's private communications — emails, messages, calls — the government should always be required to obtain a specific warrant from a judge.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:1,
+   ctx:"After 9/11, the NSA built systems collecting messages and calls from millions of Americans without individual warrants. This asks whether the warrant requirement should be absolute."},
+  {t:"During a genuine national security emergency, the government may need to act faster than the legal system allows — some rights can be temporarily set aside.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:1,
+   ctx:"Emergency powers have been used to justify Japanese internment in WWII, post-9/11 detention without trial, and COVID lockdowns. The debate is whether emergencies justify bypassing normal legal protections."},
+  {t:"Someone convicted of a crime who has fully served their sentence should regain all civil rights, including the right to vote.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:1,
+   ctx:"In many US states, felony convictions result in permanent or long-term loss of voting rights. About 4.6 million Americans cannot vote due to past convictions. This asks whether that is appropriate."},
+  {t:"When authorities have strong reason to believe someone poses an imminent danger, they should be able to detain that person before a crime is actually committed.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:1,
+   ctx:"'Preventive detention' means holding someone based on suspected future behavior, not a past crime. The legal standard in the US generally requires evidence of a completed or clearly imminent act."},
+  {t:"Cameras that automatically identify faces and match them to databases should not be deployed in public spaces without explicit legal authorization.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2,
+   ctx:"AI facial recognition is used by many police departments. It has a documented higher error rate on darker-skinned faces and has contributed to wrongful arrests. The debate is whether crime-solving benefits justify the surveillance costs."},
+  {t:"Online platforms should be legally required to remove content that health experts identify as dangerous medical misinformation.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2,
+   ctx:"During COVID, platforms removed vaccine misinformation. Critics argued this was government-directed censorship; supporters said false health information caused real deaths. This asks where the free speech line is."},
+  {t:"A news organization that publishes leaked government documents revealing illegal or unconstitutional activity should be protected from prosecution.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2,
+   ctx:"This covers cases like the Pentagon Papers and NSA leak stories. The First Amendment protects the press, but the government has debated whether publishers of classified material can be prosecuted."},
+  {t:"Requiring proof of vaccination to access shared public spaces like restaurants and concert venues is a reasonable policy during a serious public health emergency.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2,
+   ctx:"Vaccine passes were used in several countries during COVID. Supporters said they protected public health; opponents said they created a coercive two-tier society that violated medical privacy."},
+  {t:"Technology companies should be allowed to offer encrypted messaging that even law enforcement cannot access — the privacy benefit outweighs the security cost.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2,
+   ctx:"In 2016, the FBI demanded Apple help unlock a shooter's encrypted iPhone. Apple refused, arguing a 'backdoor' would weaken everyone's security. The FBI eventually paid a third party to crack it."},
+  {t:"Law enforcement should be permitted to monitor a person's public social media activity as grounds for investigation, even without a specific crime being reported.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2,
+   ctx:"Police increasingly use social media monitoring, which has flagged protesters, activists, and journalists. The question is whether this is effective threat detection or surveillance of lawful speech."},
+  {t:"People who expose genuine government wrongdoing deserve legal protection, even if they violated secrecy laws to do it.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3,
+   ctx:"US whistleblower protections cover only narrow circumstances. Edward Snowden, who exposed mass surveillance, was charged under the Espionage Act. He lives in exile after the public revelation."},
+  {t:"A confession obtained through extended, high-pressure questioning without a lawyer present should still be admissible as evidence in court.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3,
+   ctx:"False confessions account for about 30% of wrongful convictions overturned by DNA evidence. Miranda rights were established specifically to prevent coercive interrogation from producing unreliable confessions."},
+  {t:"Citizens should have a meaningful right to obtain copies of government documents — not just in theory, but with agencies required to respond quickly and completely.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3,
+   ctx:"The Freedom of Information Act (FOIA) allows requests in theory, but agencies routinely delay, heavily redact, or deny them. Many democracies have stronger government transparency requirements than the US."},
+  {t:"If someone is clearly guilty of a serious crime, the method by which police obtained the evidence against them matters less than ensuring they face justice.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3,
+   ctx:"The 'exclusionary rule' means illegally obtained evidence cannot be used in court. Critics call it a technicality that lets criminals go free; supporters say without it, police have no incentive to follow the law."},
+  {t:"Laws that impose serious criminal charges on people who block traffic during a protest are more about discouraging political speech than protecting public safety.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3,
+   ctx:"Since 2020, over 30 states have passed laws increasing penalties for protest-related disruption. Supporters say they protect drivers; critics say they are designed to deter legitimate political organizing."},
+  {t:"Private companies acting as platforms for public speech have the right to remove accounts or content, even those belonging to prominent political figures.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3,
+   ctx:"After January 6 2021, Twitter and Facebook banned Donald Trump. Companies said he incited violence; critics argued that private platforms now have enormous — and unaccountable — power over political speech."},
+
+  // ── GOVERNANCE (16) ──
+  {t:"Maintaining military alliances with other countries — even when costly — makes the United States more secure than going it alone.",a:"🌍 Governance",x:"gov",d:1,tier:1,
+   ctx:"NATO requires members to commit to mutual defense and spend at least 2% of GDP on their military. The US pays a disproportionate share. This asks whether those commitments are worth the cost."},
+  {t:"The United States should not be legally obligated to defend another country militarily, regardless of any treaty — American lives should not be risked for foreign governments.",a:"🌍 Governance",x:"gov",d:-1,tier:1,
+   ctx:"This challenges the core logic of NATO and other mutual defense agreements. The US has treaty obligations to defend dozens of countries. This asks whether those obligations should exist at all."},
+  {t:"Allowing more immigrants — including workers without advanced degrees — is good for the US economy over the long term.",a:"🌍 Governance",x:"gov",d:1,tier:1,
+   ctx:"Most economic research finds immigration increases overall GDP and tax revenues. The distributional effects — who gains versus who faces more labor competition — are more contested."},
+  {t:"The current level of unauthorized entry across the US southern border represents a genuine crisis requiring urgent and significant government action.",a:"🌍 Governance",x:"gov",d:-1,tier:1,
+   ctx:"Border crossing numbers hit record highs in recent years. Supporters of stronger enforcement say this strains communities and laws; others argue most crossers are asylum seekers with a legal right to apply."},
+  {t:"The United States should meet its international climate commitments even when doing so requires American industries to adapt how they operate.",a:"🌍 Governance",x:"gov",d:1,tier:2,
+   ctx:"The Paris Agreement committed the US to significant carbon reductions by 2030. The US withdrew under Trump and rejoined under Biden. The costs to certain industries — coal, oil, heavy manufacturing — are real and concentrated."},
+  {t:"Trade agreements that open American markets to cheaper foreign goods end up hurting more American workers than the lower consumer prices justify.",a:"🌍 Governance",x:"gov",d:-1,tier:2,
+   ctx:"Economists generally support free trade for overall GDP growth, but it causes concentrated job losses in manufacturing. NAFTA and China's WTO entry coincided with the loss of millions of US factory jobs."},
+  {t:"People fleeing violence, war, or political persecution have the right to seek protection in the United States, regardless of how they entered.",a:"🌍 Governance",x:"gov",d:1,tier:2,
+   ctx:"US and international law allow people to apply for asylum regardless of how they entered — including crossing illegally. Recent US policies have tried to restrict or end this right in practice."},
+  {t:"The United States gives too much money to foreign governments and international organizations relative to what it gets in return.",a:"🌍 Governance",x:"gov",d:-1,tier:2,
+   ctx:"US foreign aid is about 1% of the federal budget. Supporters say it prevents conflicts and builds alliances; critics say it should be redirected to domestic needs."},
+  {t:"Immigration from many different parts of the world has made American culture, innovation, and economic output stronger overall.",a:"🌍 Governance",x:"gov",d:1,tier:2,
+   ctx:"The US has been shaped by many waves of immigration. This asks whether you see the resulting cultural change as generally positive or negative for American identity and wellbeing."},
+  {t:"Placing tariffs on imported goods — even if it raises prices for American consumers — is sometimes justified to protect domestic industries and national security.",a:"🌍 Governance",x:"gov",d:-1,tier:2,
+   ctx:"Tariffs are a tax on imports paid by American importers, often passed to consumers. Both Trump and Biden imposed significant tariffs on China. The question is whether protecting industries justifies higher consumer costs."},
+  {t:"An international court should be able to try individuals for war crimes or crimes against humanity, even if their home country does not consent.",a:"🌍 Governance",x:"gov",d:1,tier:3,
+   ctx:"The International Criminal Court (ICC) has this theoretical authority, but the US is not a member. The US does not recognize its jurisdiction over American citizens, arguing sovereignty protections are more important."},
+  {t:"International bodies like the UN, WHO, and WTO have accumulated more authority over domestic American policy than they should have.",a:"🌍 Governance",x:"gov",d:-1,tier:3,
+   ctx:"These organizations set standards and agreements that member states commit to follow. Critics say they erode sovereignty; supporters say they coordinate solutions to problems no single country can solve."},
+  {t:"Large technology companies that operate globally should face binding international rules on data privacy, not just the laws of wherever they are headquartered.",a:"🌍 Governance",x:"gov",d:1,tier:3,
+   ctx:"The EU's GDPR has become a de facto global data privacy standard. The US has no equivalent federal law. This asks whether international rules should govern companies like Google and Meta regardless of where they are based."},
+  {t:"Continuing to provide military and financial support to Ukraine is not worth the cost to American taxpayers.",a:"🌍 Governance",x:"gov",d:-1,tier:3,
+   ctx:"The US has provided over $100 billion to Ukraine since Russia's 2022 invasion. Supporters say it's necessary to prevent further Russian expansion; critics say it is not America's fight."},
+  {t:"Undocumented people who have lived, worked, and raised families in the United States for many years should have access to a legal pathway to stay.",a:"🌍 Governance",x:"gov",d:1,tier:3,
+   ctx:"About 11 million undocumented immigrants live in the US, many for over a decade with US-born children. Critics say any pathway rewards illegal entry; supporters say mass deportation is neither feasible nor humane."},
+  {t:"When American national interests conflict with international rules or the expectations of allies, the US should act in its own interest.",a:"🌍 Governance",x:"gov",d:-1,tier:3,
+   ctx:"This is the core of 'America First' foreign policy — that the US should prioritize its own interests even when it means breaking international norms. The alternative is a rules-based international order."},
+
+  // ── SYSTEM TRUST (16) ──
+  {t:"The 2020 US presidential election result accurately reflected how Americans voted.",a:"🔎 System Trust",x:"system",d:1,tier:1,
+   ctx:"Dozens of courts, election officials (including Republicans), and the Justice Department found no evidence of widespread fraud that affected the 2020 outcome. This asks whether you accept that conclusion."},
+  {t:"Television news and major national newspapers tend to present stories in ways that systematically favor one side of the political debate.",a:"🔎 System Trust",x:"system",d:-1,tier:1,
+   ctx:"Media bias is real but complex — studies find different outlets lean different directions. This asks whether you see bias as systematic and fundamental, or whether outlets generally try to report fairly despite their imperfections."},
+  {t:"When scientists in a given field reach a strong consensus on an empirical question, that consensus should carry significant weight in how policy is set.",a:"🔎 System Trust",x:"system",d:1,tier:1,
+   ctx:"Scientific consensus means the overwhelming majority of field experts agree based on accumulated evidence. This asks whether that consensus deserves special policy weight, or whether political leaders should weigh it against other factors."},
+  {t:"Regardless of which party is in power, the priorities of large donors and corporations tend to shape policy outcomes more than the views of ordinary voters.",a:"🔎 System Trust",x:"system",d:-1,tier:1,
+   ctx:"A Princeton study found policy outcomes track elite preferences more closely than public opinion. This asks whether you see wealthy donor influence as a fundamental, structural feature of American democracy."},
+  {t:"Despite political controversy around recent appointments, the Supreme Court still mostly makes decisions based on legal reasoning rather than pure party loyalty.",a:"🔎 System Trust",x:"system",d:1,tier:2,
+   ctx:"Research on judicial behavior shows justices do tend to rule in patterns consistent with the party of the president who appointed them, though they also cross party lines on many cases."},
+  {t:"During the COVID-19 pandemic, financial pressures from pharmaceutical companies influenced how quickly regulators approved vaccines.",a:"🔎 System Trust",x:"system",d:-1,tier:2,
+   ctx:"COVID vaccines were approved under Emergency Use Authorization after large clinical trials. The FDA process was faster than normal. This asks whether you see that as dangerous regulatory capture or an appropriate emergency response."},
+  {t:"Government agencies staffed by career scientists and civil servants — like the CDC and FDA — generally try to make decisions based on evidence, not politics.",a:"🔎 System Trust",x:"system",d:1,tier:2,
+   ctx:"These agencies have career staff theoretically insulated from political pressure. In practice, political appointees at the top can shape priorities. This asks how much you trust the institutions themselves, separate from who's in charge."},
+  {t:"There are powerful, coordinated networks of extremely wealthy and influential people who shape global events in ways that the general public never learns about.",a:"🔎 System Trust",x:"system",d:-1,tier:2,
+   ctx:"This describes theories ranging from relatively mild (influence of major donors, lobbying networks, think tanks) to more extreme versions. This asks how much hidden coordination you believe exists among powerful elites."},
+  {t:"Organizations that independently monitor government and corporate behavior — like civil liberties groups or investigative journalism outlets — serve a vital democratic function.",a:"🔎 System Trust",x:"system",d:1,tier:2,
+   ctx:"This covers watchdog organizations, the ACLU, press freedom groups, and investigative journalism. Some see them as vital democratic infrastructure; others see them as politically motivated advocacy operations."},
+  {t:"Official economic statistics — like inflation rates and unemployment figures — are presented in ways that make conditions look better than most people actually experience.",a:"🔎 System Trust",x:"system",d:-1,tier:2,
+   ctx:"There are legitimate debates about how economic measures are constructed — e.g. whether unemployment counts discouraged workers, or whether official inflation reflects real consumer costs. This asks whether you see gaps as accidental or deliberate."},
+  {t:"Academic research, despite its flaws, is still a more reliable guide to truth on complex questions than social media commentary or political punditry.",a:"🔎 System Trust",x:"system",d:1,tier:3,
+   ctx:"The academic peer review system has real problems — replication failures, publication bias, slow pace. But this asks whether you still see it as more reliable than alternatives like social media or partisan media analysis."},
+  {t:"Given how much money now flows into US elections, voting functions more as a ritual that gives people a sense of participation than as a genuine exercise of democratic power.",a:"🔎 System Trust",x:"system",d:-1,tier:3,
+   ctx:"The Supreme Court's Citizens United ruling (2010) allowed unlimited political spending. The 2024 election cost an estimated $15 billion. This asks whether that money has fundamentally compromised what elections can achieve."},
+  {t:"The COVID-19 vaccines authorized in the US were safe and effective enough that recommending them to healthy adults was the correct public health decision.",a:"🔎 System Trust",x:"system",d:1,tier:3,
+   ctx:"The mRNA vaccines showed ~90%+ efficacy against severe illness in trials. Serious adverse events were rare but real. This asks whether, given the available evidence, the public health recommendation was sound."},
+  {t:"The financial industry — banks, private equity, and hedge funds — primarily extracts wealth from the broader economy rather than creating value for most people.",a:"🔎 System Trust",x:"system",d:-1,tier:3,
+   ctx:"Critics point to the 2008 financial crisis, predatory lending, and private equity buyouts. Defenders argue financial markets allocate capital and enable investment. This asks which view you broadly hold."},
+  {t:"The vast majority of police officers are doing their jobs in good faith — problems in policing come from individual bad actors more than from the system itself.",a:"🔎 System Trust",x:"system",d:1,tier:3,
+   ctx:"After high-profile police killings, debate intensified over whether misconduct reflects 'bad apples' or systemic problems in training, incentives, and accountability structures. This asks which view you hold."},
+  {t:"The American political system — elections, Congress, courts — is too distorted by money and concentrated power for meaningful reform to emerge from within it.",a:"🔎 System Trust",x:"system",d:-1,tier:3,
+   ctx:"This is the argument that the rules themselves are broken and cannot be fixed from within. The counterargument is that democratic change does happen through elections, legislation, and courts — slowly, but it does happen."},
 ];
 
 // ══ MODES & BUILD ══
@@ -617,19 +721,62 @@ const AXES={
 
 // ══ IDEOLOGIES ══
 const IDEO=[
-  {n:"Progressive Left",     s:[-75,-60,60,50,40], c:"#2860c8",def:"Believes in strong government action to reduce inequality, expand rights, and tackle systemic injustice. Associated with figures like Bernie Sanders or Jeremy Corbyn."},
-  {n:"Social Democrat",      s:[-55,-30,40,40,50], c:"#5b8dee",def:"Supports a generous welfare state and regulated capitalism within democratic institutions. Common in Scandinavia — think Sweden or Germany's political mainstream."},
-  {n:"Classical Liberal",    s:[-10,-65,75,10,55], c:"#1e9c50",def:"Prioritizes individual freedom above all — both economic freedom and personal liberty. The original meaning of 'liberal' before it shifted in US politics."},
-  {n:"Libertarian",          s:[40,-70,80,0,30],   c:"#c8872a",def:"Wants minimal government in both the economy and personal life — maximum individual freedom. 'Get the government out of my wallet and my bedroom.'"},
-  {n:"Moderate Conservative",s:[40,25,-10,-30,40], c:"#e8a060",def:"Favors free markets and gradual change, but accepts some social order and government functions. The traditional center-right."},
-  {n:"Social Conservative",  s:[20,65,-40,-50,35], c:"#c83828",def:"Emphasizes traditional values, strong community norms, and cultural continuity. May support some economic help for communities but wants strong social norms maintained."},
-  {n:"Nationalist Right",    s:[15,55,-30,-80,-30],c:"#8b0000",def:"Prioritizes national identity and sovereignty, highly skeptical of immigration and globalism. Associated with figures like Marine Le Pen or Viktor Orbán."},
-  {n:"Authoritarian Left",   s:[-70,60,-50,20,-20],c:"#8c38c8",def:"Supports collective economic control and equality, but through strong centralized power. Think Soviet-style communism or Maoist China."},
-  {n:"Left Populist",        s:[-50,10,20,-30,-60],c:"#5cb8e0",def:"Deeply distrusts elites and big institutions, but wants more economic redistribution. Blends economic left with anti-establishment distrust."},
-  {n:"Right Populist",       s:[20,40,-20,-60,-65],c:"#e08040",def:"Distrusts elites and mainstream institutions, puts national interests first. Think Trump, Bolsonaro, or Brexit — skeptical of 'the establishment.'"},
-  {n:"Technocrat",           s:[-5,10,10,40,75],   c:"#40b8a0",def:"Trusts experts and institutions to manage society through evidence and data. Believes complex policy should be handled by qualified specialists."},
-  {n:"Moderate Left",        s:[-30,-10,25,20,30], c:"#7baeff",def:"Leans left on economics and broadly supports personal freedoms, but takes a pragmatic rather than ideological approach. Common among center-left Democrats or UK Labour moderates."},
-  {n:"Moderate Right",       s:[25,15,-5,-15,35],  c:"#f0b070",def:"Leans right on economics with moderate social views. Broadly accepts democratic norms and institutions. Common among traditional Republicans or UK Conservatives."},
+  {n:"Progressive Left",      s:[-78,-55, 55, 45, 35], c:"#2860c8",
+   plain:"On the traditional left-right scale, this is the left — the further left end of it.",
+   spectrum:"Far Left",
+   def:"Believes structural change is needed to fix deep inequalities in wealth, race, and power. Wants strong government intervention in the economy, expansive social rights, and sees existing institutions as fundamentally flawed. Think Bernie Sanders, Alexandria Ocasio-Cortez, or Jeremy Corbyn."},
+  {n:"Social Democrat",       s:[-52,-25, 38, 38, 48], c:"#5b8dee",
+   plain:"On the traditional left-right scale, this is centre-left — the mainstream political tradition across much of Western Europe.",
+   spectrum:"Centre-Left",
+   def:"Wants a generous welfare state, regulated capitalism, and strong worker protections — but within democratic institutions rather than revolutionary change. The dominant political tradition in Western Europe. Think Scandinavia, Germany's SPD, or the mainstream of the UK Labour Party."},
+  {n:"Liberal Progressive",   s:[-28,-55, 60, 30, 42], c:"#38b06e",
+   plain:"On the traditional left-right scale, this is centre-left, with a strong emphasis on personal freedoms and civil liberties.",
+   spectrum:"Centre-Left / Civil Libertarian",
+   def:"Strongly values personal freedom and civil liberties alongside moderate economic redistribution. Champions individual rights — reproductive, LGBTQ+, privacy — while supporting regulated markets and international cooperation. Think ACLU-type politics, or the libertarian wing of the Democratic Party."},
+  {n:"Libertarian",           s:[ 55,-72, 78,  5, 25], c:"#c8872a",
+   plain:"Libertarians don't fit neatly on a left-right line — they are fiscally right-wing but strongly anti-government on social issues too. Often described as 'fiscally conservative, socially liberal.'",
+   spectrum:"Libertarian (Off the traditional scale)",
+   def:"Believes government should be radically smaller in both the economy and personal life. Low taxes, free markets, minimal regulation, and maximum individual freedom. Neither traditionally left nor right — opposes government control regardless of which party wields it. Think Ron Paul or the Cato Institute."},
+  {n:"Liberal Conservative",  s:[ 30,-30, 20,-10, 38], c:"#a0c060",
+   plain:"On the traditional left-right scale, this is centre-right — but more socially open than a typical conservative, and comfortable with globalisation and diversity.",
+   spectrum:"Centre-Right / Socially Liberal",
+   def:"Economically market-oriented but socially open-minded — comfortable with cultural change, immigration, and globalization while preferring limited government and lower taxes. Common in Europe (think Macron, or pre-2016 UK Conservatives) but harder to place on the American left-right spectrum. Often fiscally right, socially liberal."},
+  {n:"Traditional Conservative",s:[38, 32,-12,-28, 42], c:"#e8a060",
+   plain:"On the traditional left-right scale, this is centre-right to right — the classic mainstream conservative position in most democracies.",
+   spectrum:"Centre-Right",
+   def:"Believes in free enterprise, limited government, and gradual rather than rapid social change. Values stable institutions, rule of law, and proven norms over untested reform. The pre-Trump Republican mainstream — think George H.W. Bush, John McCain, or the UK Conservative Party of the 1990s."},
+  {n:"Social Conservative",   s:[ 22, 65,-38,-48, 32], c:"#c83828",
+   plain:"On the traditional left-right scale, this is right-wing — with a particular focus on cultural and moral values rather than just economics.",
+   spectrum:"Right / Social Right",
+   def:"Believes traditional moral values — rooted in religion, family structure, and cultural heritage — should shape law and public life. Accepts market economics but prioritizes social order, community cohesion, and the defense of traditional institutions against rapid change."},
+  {n:"Nationalist Right",     s:[ 18, 58,-28,-78,-28], c:"#8b0000",
+   plain:"On the traditional left-right scale, this is right-wing to far-right — combining strong nationalism with scepticism of elites and international institutions.",
+   spectrum:"Right / Nationalist",
+   def:"Puts national identity and sovereignty above all else. Deeply skeptical of immigration, globalism, and international institutions. Sees the political establishment as corrupt and out of touch with ordinary people's concerns about cultural change and national decline. Think Marine Le Pen, Viktor Orbán, or the MAGA wing of the Republican Party."},
+  {n:"Authoritarian Left",    s:[-72, 62,-48, 18,-22], c:"#8c38c8",
+   plain:"On the traditional left-right scale, this is far-left — but with an emphasis on strong state power rather than individual freedom.",
+   spectrum:"Far Left / Authoritarian",
+   def:"Seeks radical economic equality and collective ownership, but through centralized state power rather than individual liberty. Willing to restrict dissent and concentrate authority to achieve social transformation. Think Soviet-era communism, Maoist China, or the harder edges of 20th-century socialist movements."},
+  {n:"Left Populist",         s:[-48,  8, 18,-32,-62], c:"#5cb8e0",
+   plain:"On the traditional left-right scale, this leans left — but the defining feature is deep distrust of the establishment, from both sides of politics.",
+   spectrum:"Left / Anti-Establishment",
+   def:"Distrusts the political establishment, corporate power, and mainstream media — but from the left. Wants economic redistribution and stronger worker protections, while being skeptical of globalization and elite-driven international institutions. Think early Bernie Sanders, Podemos in Spain, or parts of the UK's Corbyn movement."},
+  {n:"Right Populist",        s:[ 22, 42,-18,-62,-68], c:"#e08040",
+   plain:"On the traditional left-right scale, this leans right — but the defining feature is rejection of the political establishment, elites, and mainstream institutions.",
+   spectrum:"Right / Anti-Establishment",
+   def:"Believes ordinary people are betrayed by corrupt elites, rigged systems, and out-of-touch institutions. Skeptical of mainstream media, global organizations, and the political class regardless of party. Combines cultural conservatism with economic grievance and deep distrust of established power. Think Trump, Bolsonaro, or the Brexit movement."},
+  {n:"Technocrat",            s:[ -5,  8, 12, 42, 78], c:"#40b8a0",
+   plain:"On the traditional left-right scale, this sits near the centre — the defining feature is high trust in experts and institutions rather than strong left or right economic views.",
+   spectrum:"Centre / Pro-Institution",
+   def:"Believes complex policy problems are best solved by qualified experts using evidence and data rather than ideology or populist instinct. Highly trusts institutions, international bodies, and scientific consensus. Values competence and stability over ideological purity. Think Bloomberg, the IMF, or much of the EU bureaucratic class."},
+  {n:"Progressive Realist",   s:[-32, -8, 22, 18, 28], c:"#7baeff",
+   plain:"On the traditional left-right scale, this is centre-left — leaning toward the left on most issues but pragmatic and moderate about how change happens.",
+   spectrum:"Centre-Left",
+   def:"Leans left on economic fairness and social progress, but prioritizes what's achievable over what's ideal. Pragmatic about working within institutions and building coalitions rather than demanding revolutionary change. Values evidence, compromise, and incremental reform. Think Obama-era politics, or mainstream center-left Democrats."},
+  {n:"One-Nation Conservative",s:[ 28, 18, -8,-12, 35], c:"#f0b070",
+   plain:"On the traditional left-right scale, this is centre-right — right-leaning on economics but moderate and non-ideological on most social issues.",
+   spectrum:"Centre-Right",
+   def:"Center-right on economics — favors markets, lower taxes, and limited government — but socially moderate, accepting of diversity, and comfortable with democratic institutions. Not ideologically rigid. Think mainstream pre-Trump Republicans, the moderate wing of the UK Conservative Party, or Germany's CDU."},
 ];
 
 // ══ CURATED FAMOUS FIGURES (20 most globally recognizable) ══
@@ -755,6 +902,25 @@ function renderQ(){
   nx.disabled=answers[cur]===null;
   nx.textContent=cur===qSet.length-1?'See My Results →':'Next →';
   document.querySelectorAll('.sopt').forEach((o,i)=>o.classList.toggle('on',answers[cur]===i));
+  // Context tooltip
+  const ctxRow=document.getElementById('qContextRow');
+  const ctxBox=document.getElementById('qCtxBox');
+  const ctxBtn=document.getElementById('qCtxBtn');
+  if(q.ctx){
+    ctxRow.style.display='block';
+    ctxBox.textContent=q.ctx;
+    ctxBox.style.display='none';
+    document.getElementById('qCtxBtnLabel').textContent='What is this about?';
+  } else {
+    ctxRow.style.display='none';
+  }
+}
+function toggleCtx(){
+  const box=document.getElementById('qCtxBox');
+  const lbl=document.getElementById('qCtxBtnLabel');
+  const open=box.style.display==='block';
+  box.style.display=open?'none':'block';
+  lbl.textContent=open?'What is this about?':'Hide explanation';
 }
 function ans(v){answers[cur]=v;document.querySelectorAll('.sopt').forEach((o,i)=>o.classList.toggle('on',i===v));document.getElementById('bnx').disabled=false;}
 function nextQ(){if(answers[cur]===null)return;if(cur===qSet.length-1){triggerReveal();return;}cur++;renderQ();}
@@ -763,7 +929,9 @@ function prevQ(){if(cur>0){cur--;renderQ();}}
 function calcS(){
   if(cachedScores)return cachedScores;
   const raw={econ:0,social:0,civil:0,gov:0,system:0},cnt={econ:0,social:0,civil:0,gov:0,system:0};
-  qSet.forEach((q,i)=>{if(answers[i]!==null){raw[q.x]+=SM[answers[i]]*q.d;cnt[q.x]++;}});
+  // SM[0]=2 (strongly agree)...SM[4]=-2 (strongly disagree)
+  // d:1 means "agree = left/lib/globalist/trust" so we NEGATE: agree on d:1 → negative score (left)
+  qSet.forEach((q,i)=>{if(answers[i]!==null){raw[q.x]+= -SM[answers[i]] * q.d;cnt[q.x]++;}});
   const n={};for(const ax in raw){const m=cnt[ax]*2;n[ax]=m===0?0:Math.round((raw[ax]/m)*100);}
   cachedScores=n;return n;
 }
@@ -773,19 +941,20 @@ function figDist2d(s,fig){return Math.sqrt(Math.pow(s.econ-fig.e,2)+Math.pow(s.s
 function getStrength(p){return p>=60?'Strongly':p>=35?'Moderately':p>=12?'Slightly':'';}
 
 const TAGLINES={
-  "Progressive Left":"Bold, systemic change — not just tweaks at the margins.",
-  "Social Democrat":"A fair society built through democratic means.",
-  "Classical Liberal":"Freedom first — for everyone, in every direction.",
-  "Libertarian":"Get the government out of your wallet and your bedroom.",
-  "Moderate Conservative":"Proven traditions, sensible markets, gradual change.",
-  "Social Conservative":"Strong communities, shared values, cultural continuity.",
-  "Nationalist Right":"Nation first. Sovereignty before globalism.",
-  "Authoritarian Left":"Radical equality — by any means necessary.",
-  "Left Populist":"The system is rigged — and it needs tearing down.",
-  "Right Populist":"Elites are out of touch. Ordinary people come first.",
-  "Technocrat":"Evidence, expertise, and institutions — not just rhetoric.",
-  "Moderate Left":"Lean left, stay practical. Progress without revolution.",
-  "Moderate Right":"Lean right, stay grounded. Markets, norms, stability.",
+  "Progressive Left":        "The system isn't broken — it was built this way. Time to rebuild it.",
+  "Social Democrat":         "A fair society, built through democratic means — not revolution.",
+  "Liberal Progressive":     "Free to be yourself. Free to be different. Government should protect that.",
+  "Libertarian":             "Get the government out of your wallet and your bedroom.",
+  "Liberal Conservative":    "Open to the world, cautious about the state. Markets and freedom, not culture wars.",
+  "Traditional Conservative":"Proven institutions, earned trust, gradual change. Don't fix what isn't broken.",
+  "Social Conservative":     "Strong communities, shared values, cultural continuity.",
+  "Nationalist Right":       "Nation first. The establishment has failed ordinary people long enough.",
+  "Authoritarian Left":      "Radical equality — by any means necessary.",
+  "Left Populist":           "The economy is rigged — and the political class is in on it.",
+  "Right Populist":          "Elites are out of touch. Ordinary people keep getting left behind.",
+  "Technocrat":              "Evidence, expertise, and institutions — not populist instinct.",
+  "Progressive Realist":     "Lean left, stay practical. Real change over ideological purity.",
+  "One-Nation Conservative": "Center-right, not culture warrior. Markets, moderation, stability.",
 };
 
 // ══ REVEAL ══
@@ -797,6 +966,14 @@ function triggerReveal(){
 
   document.getElementById('revName').textContent=best.n;
   document.getElementById('revTagline').textContent=TAGLINES[best.n]||'A complex picture that defies simple labels.';
+
+  // Reset all reveal elements to invisible before animating (important for retakes)
+  ['revEyebrow','revName','revTagline','revCta'].forEach(id=>{
+    const el=document.getElementById(id);
+    el.style.transition='none';
+    el.style.opacity='0';
+    el.style.transform='translateY(12px)';
+  });
 
   // Build reveal axis rows — redesigned for maximum clarity
   const axEl=document.getElementById('revAxes');axEl.innerHTML='';
@@ -885,7 +1062,9 @@ function triggerReveal(){
 function showFullResults(){
   const s=calcS(),best=bestIdeo(s),cfg=MODES[mode];
   document.getElementById('rIdeo').textContent=best.n;
+  document.getElementById('rSpectrum').textContent=best.spectrum||'';
   document.getElementById('rIdeoDef').textContent=best.def;
+  document.getElementById('rPlainExplain').textContent=best.plain||'';
   document.getElementById('spId').textContent=best.n;
   const tag=document.getElementById('rMtag');
   tag.textContent=cfg.label;tag.style.background=cfg.bg;tag.style.color=cfg.color;tag.style.border=`1px solid ${cfg.color}`;
@@ -938,14 +1117,31 @@ function drawCompass(s){
   ctx.beginPath();ctx.moveTo(px(0),pad);ctx.lineTo(px(0),pad+inner);ctx.stroke();
   ctx.beginPath();ctx.moveTo(pad,py(0));ctx.lineTo(pad+inner,py(0));ctx.stroke();
 
-  // Axis edge labels
-  ctx.font='bold 11px Outfit,sans-serif';ctx.fillStyle=isDark?'rgba(255,255,255,.55)':'rgba(0,0,0,.5)';
+  // Axis edge labels — drawn inside the border so they're always visible
+  const labelColor=isDark?'rgba(255,255,255,.5)':'rgba(0,0,0,.45)';
+  ctx.font='bold 11px Outfit,sans-serif';
+  ctx.fillStyle=labelColor;
+
+  // X-axis: LEFT label on left edge, RIGHT label on right edge
+  ctx.textAlign='left'; ctx.textBaseline='middle';
+  ctx.fillText('◄ LEFT (Economic)',pad+6,py(0)-12);
+  ctx.textAlign='right';
+  ctx.fillText('RIGHT (Economic) ►',pad+inner-6,py(0)-12);
+
+  // Y-axis: LIBERTARIAN at top, AUTHORITARIAN at bottom — rotated text on left side
+  ctx.save();
+  ctx.translate(pad+10,pad+inner/4);
+  ctx.rotate(-Math.PI/2);
   ctx.textAlign='center';ctx.textBaseline='middle';
-  ctx.fillText('◄ Left',pad+inner/4,pad-14);
-  ctx.fillText('Right ►',pad+3*inner/4,pad-14);
-  // Vertical labels — top=libertarian, bottom=authoritarian
-  ctx.save();ctx.translate(pad-14,pad+inner/4);ctx.rotate(-Math.PI/2);ctx.fillText('▲ Libertarian',0,0);ctx.restore();
-  ctx.save();ctx.translate(pad-14,pad+3*inner/4);ctx.rotate(-Math.PI/2);ctx.fillText('Authoritarian ▼',0,0);ctx.restore();
+  ctx.fillText('▲ LIBERTARIAN (Social)',0,0);
+  ctx.restore();
+
+  ctx.save();
+  ctx.translate(pad+10,pad+3*inner/4);
+  ctx.rotate(-Math.PI/2);
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('AUTHORITARIAN (Social) ▼',0,0);
+  ctx.restore();
 
   // Figures
   FIGURES.forEach(fig=>{
@@ -1089,7 +1285,10 @@ function renderIdeo(s){
     el.insertAdjacentHTML('beforeend',`
       <div class="idrow${you?' you':''}">
         <div class="iddot" style="background:${id.c}"></div>
-        <span class="idnm">${tip(id.n,id.def)}</span>
+        <div style="flex:1">
+          <div class="idnm">${tip(id.n,id.def)}</div>
+          ${id.spectrum?`<div style="font-size:.68rem;color:var(--muted2);margin-top:2px;">${id.spectrum}</div>`:''}
+        </div>
         ${you?`<span class="idmb" style="background:var(--accent-bg);color:var(--accent)">Closest match</span>`:''}
         <span class="idpct">${match}% match</span>
       </div>`);
