@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Compass — Political Alignment Test</title>
+<meta name="description" content="Find out where you actually stand politically. 3 test lengths, 5 dimensions, plain-English results.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Outfit:wght@300;400;500;600&display=swap');
+
+[data-theme="light"]{
+  --bg:#f7f5f0;--bg2:#eeece6;--surface:#fff;--surface2:#f3f1eb;
+  --border:#e0ddd5;--border2:#ccc9be;
+  --text:#1a1814;--muted:#6b6560;--muted2:#9e9a93;
+  --shadow:rgba(0,0,0,.07);--shadow2:rgba(0,0,0,.14);
+  --accent:#c8872a;--accent-bg:rgba(200,135,42,.10);--accent-border:rgba(200,135,42,.28);
+  --econ:#2860c8;--social:#c83828;--civil:#1e9c50;--gov:#c8872a;--system:#8c38c8;
+  --econ-bg:rgba(40,96,200,.08);--social-bg:rgba(200,56,40,.08);
+  --civil-bg:rgba(30,156,80,.08);--gov-bg:rgba(200,135,42,.08);--system-bg:rgba(140,56,200,.08);
+  --hdr-bg:rgba(247,245,240,.93);
+}
+[data-theme="dark"]{
+  --bg:#0f0f12;--bg2:#141418;--surface:#1a1a1f;--surface2:#222228;
+  --border:#2e2e38;--border2:#3e3e4a;
+  --text:#f0eeea;--muted:#7a7882;--muted2:#50505a;
+  --shadow:rgba(0,0,0,.3);--shadow2:rgba(0,0,0,.5);
+  --accent:#e8c547;--accent-bg:rgba(232,197,71,.10);--accent-border:rgba(232,197,71,.26);
+  --econ:#5b8dee;--social:#e05c5c;--civil:#5ce07a;--gov:#e8c547;--system:#c47de8;
+  --econ-bg:rgba(91,141,238,.10);--social-bg:rgba(224,92,92,.10);
+  --civil-bg:rgba(92,224,122,.10);--gov-bg:rgba(232,197,71,.10);--system-bg:rgba(196,125,232,.10);
+  --hdr-bg:rgba(15,15,18,.93);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;transition:background .3s,color .3s;}
+
+/* HEADER */
+.hdr{position:fixed;top:0;left:0;right:0;z-index:200;height:58px;background:var(--hdr-bg);backdrop-filter:blur(18px);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:14px;transition:background .3s,border-color .3s;}
+.hdr-logo{font-family:'Fraunces',serif;font-size:1.1rem;font-weight:700;letter-spacing:-.02em;white-space:nowrap;cursor:pointer;user-select:none;}
+.hdr-logo:hover span{text-decoration:underline;text-decoration-style:dotted;}
+.hdr-logo span{color:var(--accent);font-style:italic;}
+.hdr-prog{flex:1;display:none;align-items:center;gap:12px;}
+.hdr-track{flex:1;height:3px;background:var(--border);border-radius:2px;overflow:hidden;}
+.hdr-fill{height:100%;background:var(--accent);border-radius:2px;transition:width .35s ease;width:0%;}
+.hdr-count{font-size:.7rem;color:var(--muted);font-weight:500;white-space:nowrap;}
+.hdr-tag{font-size:.67rem;font-weight:700;padding:3px 10px;border-radius:10px;border:1px solid var(--border2);color:var(--muted);display:none;white-space:nowrap;}
+.hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.theme-toggle{background:var(--surface2);border:1px solid var(--border2);color:var(--muted);font-size:.85rem;width:34px;height:34px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s;flex-shrink:0;}
+.theme-toggle:hover{border-color:var(--accent);color:var(--accent);}
+.hdr-back{background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.75rem;font-weight:500;padding:6px 13px;border-radius:6px;cursor:pointer;transition:all .15s;display:none;}
+.hdr-back:hover{color:var(--text);border-color:var(--muted2);}
+
+.sec{display:none;padding-top:58px;min-height:100vh;}
+.sec.on{display:block;}
+
+/* LANDING */
+.land{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;padding:60px 24px 80px;text-align:center;position:relative;overflow:hidden;}
+.land-bg{position:absolute;inset:0;z-index:0;background:radial-gradient(ellipse 80% 45% at 50% 0%,var(--econ-bg) 0%,transparent 60%),radial-gradient(ellipse 50% 35% at 88% 88%,var(--gov-bg) 0%,transparent 55%);}
+.land-grid{position:absolute;inset:0;z-index:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:56px 56px;opacity:.5;mask-image:radial-gradient(ellipse 75% 70% at 50% 40%,black 0%,transparent 70%);}
+.land-inner{position:relative;z-index:1;max-width:820px;width:100%;}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;background:var(--accent-bg);border:1px solid var(--accent-border);color:var(--accent);font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:5px 13px;border-radius:20px;margin-bottom:24px;}
+.eyebrow::before{content:'◆';font-size:.42rem;}
+.land h1{font-family:'Fraunces',serif;font-size:clamp(2.5rem,7vw,4.8rem);font-weight:700;line-height:1.06;letter-spacing:-.035em;margin-bottom:20px;}
+.land h1 em{font-style:italic;color:var(--accent);}
+.land-sub{font-size:clamp(.9rem,2vw,1.08rem);color:var(--muted);line-height:1.72;max-width:490px;margin:0 auto 44px;}
+.pills{display:flex;flex-wrap:wrap;gap:7px;justify-content:center;margin-bottom:48px;}
+.pill{display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:20px;font-size:.71rem;font-weight:600;border:1px solid;}
+.pdot{width:6px;height:6px;border-radius:50%;}
+.pe{background:var(--econ-bg);border-color:var(--econ);color:var(--econ);}.pe .pdot{background:var(--econ);}
+.ps{background:var(--social-bg);border-color:var(--social);color:var(--social);}.ps .pdot{background:var(--social);}
+.pc{background:var(--civil-bg);border-color:var(--civil);color:var(--civil);}.pc .pdot{background:var(--civil);}
+.pg{background:var(--gov-bg);border-color:var(--gov);color:var(--gov);}.pg .pdot{background:var(--gov);}
+.psy{background:var(--system-bg);border-color:var(--system);color:var(--system);}.psy .pdot{background:var(--system);}
+.mode-hdg{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:16px;}
+.mode-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:32px;}
+.mc{background:var(--surface);border:1.5px solid var(--border);border-radius:14px;padding:24px 20px 20px;cursor:pointer;text-align:left;transition:all .2s;box-shadow:0 2px 8px var(--shadow);}
+.mc:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 28px var(--shadow2);}
+.mc.star{border-color:var(--accent);}
+.mbadge{display:inline-flex;align-items:center;font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:3px 9px;border-radius:10px;margin-bottom:12px;}
+.bq{background:var(--civil-bg);color:var(--civil);}
+.bm{background:var(--accent-bg);color:var(--accent);}
+.bd{background:var(--system-bg);color:var(--system);}
+.mcount{font-family:'Fraunces',serif;font-size:2.2rem;font-weight:700;letter-spacing:-.04em;line-height:1;margin-bottom:3px;}
+.mqlbl{font-size:.68rem;color:var(--muted);font-weight:500;margin-bottom:12px;}
+.mname{font-family:'Fraunces',serif;font-size:1.05rem;font-weight:600;margin-bottom:7px;letter-spacing:-.01em;}
+.mdesc{font-size:.78rem;color:var(--muted);line-height:1.58;}
+.mtime{font-size:.67rem;color:var(--muted2);margin-top:12px;}.mtime::before{content:'⏱ ';}
+.msbtn{width:100%;margin-top:16px;background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;padding:10px;border-radius:7px;cursor:pointer;transition:all .15s;}
+.mc:hover .msbtn,.mc.star .msbtn{background:var(--accent);color:#1a1814;border-color:var(--accent);}
+[data-theme="dark"] .mc:hover .msbtn,[data-theme="dark"] .mc.star .msbtn{color:#0f0f12;}
+.land-note{font-size:.7rem;color:var(--muted2);}
+
+/* QUESTION */
+.qwrap{max-width:680px;margin:0 auto;padding:44px 24px 90px;}
+.qmeta{display:flex;align-items:center;justify-content:space-between;margin-bottom:26px;}
+.qcat{display:flex;align-items:center;gap:7px;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);}
+.qcdot{width:8px;height:8px;border-radius:50%;}
+.qnum{font-size:.68rem;color:var(--muted2);font-weight:500;}
+.qtext{font-family:'Fraunces',serif;font-size:clamp(1.28rem,3vw,1.82rem);font-weight:400;line-height:1.42;letter-spacing:-.02em;margin-bottom:36px;min-height:68px;}
+.shdr{display:flex;justify-content:space-between;font-size:.67rem;color:var(--muted2);margin-bottom:9px;padding:0 1px;}
+.srow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:30px;}
+.sopt{background:var(--surface);border:1.5px solid var(--border);border-radius:10px;padding:14px 7px 12px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:8px;font-family:'Outfit',sans-serif;font-size:.74rem;font-weight:500;color:var(--muted);text-align:center;line-height:1.3;transition:all .13s;box-shadow:0 1px 4px var(--shadow);}
+.sopt:hover{border-color:var(--border2);color:var(--text);background:var(--surface2);}
+.sopt.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent);}
+.spip{width:10px;height:10px;border-radius:50%;border:2px solid var(--border2);transition:all .13s;}
+.sopt:hover .spip{border-color:var(--muted2);}
+.sopt.on .spip{background:var(--accent);border-color:var(--accent);}
+.qnav{display:flex;align-items:center;justify-content:space-between;}
+.bbk{background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.83rem;font-weight:500;padding:11px 22px;border-radius:7px;cursor:pointer;transition:all .13s;}
+.bbk:hover{color:var(--text);border-color:var(--muted2);}
+.bbk:disabled{opacity:.25;cursor:default;}
+.bnx{background:var(--accent);color:#1a1814;border:none;font-family:'Outfit',sans-serif;font-size:.83rem;font-weight:700;padding:11px 28px;border-radius:7px;cursor:pointer;transition:all .17s;}
+[data-theme="dark"] .bnx{color:#0f0f12;}
+.bnx:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-1px);}
+.bnx:disabled{opacity:.28;cursor:default;}
+.qhint{font-size:.67rem;color:var(--muted2);text-align:center;margin-top:13px;}
+
+/* REVEAL */
+#secReveal{background:var(--bg);}
+.reveal-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 24px;text-align:center;position:relative;overflow:hidden;}
+.reveal-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 50%,var(--accent-bg) 0%,transparent 65%);}
+.reveal-content{position:relative;z-index:1;max-width:660px;width:100%;}
+.reveal-eyebrow{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:20px;opacity:0;transform:translateY(10px);}
+.reveal-name{font-family:'Fraunces',serif;font-size:clamp(2.4rem,8vw,5rem);font-weight:700;letter-spacing:-.04em;line-height:1;color:var(--accent);font-style:italic;margin-bottom:16px;opacity:0;transform:translateY(20px) scale(.95);}
+.reveal-tagline{font-size:clamp(1rem,2.5vw,1.2rem);color:var(--muted);line-height:1.65;max-width:480px;margin:0 auto 36px;opacity:0;transform:translateY(10px);}
+.reveal-axes{display:flex;flex-direction:column;gap:12px;margin-bottom:40px;text-align:left;}
+/* Each axis row: icon + name + chip verdict on top row, bar with end labels below */
+.reveal-axis{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;opacity:0;transform:translateX(-24px);box-shadow:0 1px 6px var(--shadow);}
+.rev-axis-top{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.rev-axis-icon{font-size:1.05rem;flex-shrink:0;}
+.rev-axis-name{font-size:.88rem;font-weight:700;flex:1;}
+.rev-axis-chip{font-size:.78rem;font-weight:700;padding:3px 11px;border-radius:20px;flex-shrink:0;white-space:nowrap;}
+/* Bar with end labels */
+.rev-bar-wrap{display:flex;align-items:center;gap:8px;}
+.rev-bar-end{font-size:.67rem;font-weight:600;color:var(--muted2);white-space:nowrap;width:82px;flex-shrink:0;}
+.rev-bar-end.right{text-align:right;}
+.rev-bar-end.active-end{font-weight:800;}
+.rev-bar-track{flex:1;height:10px;background:var(--border);border-radius:5px;position:relative;}
+.rev-bar-center-line{position:absolute;left:50%;top:-2px;bottom:-2px;width:2px;background:var(--border2);border-radius:1px;}
+.rev-bar-fill{position:absolute;height:100%;border-radius:5px;transition:width .9s cubic-bezier(.34,1.3,.64,1);}
+.rev-bar-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:3px solid var(--surface);box-shadow:0 1px 5px rgba(0,0,0,.2);transition:left .9s cubic-bezier(.34,1.3,.64,1);}
+.reveal-cta{background:var(--accent);color:#1a1814;border:none;font-family:'Outfit',sans-serif;font-size:1rem;font-weight:700;padding:14px 36px;border-radius:8px;cursor:pointer;transition:all .2s;opacity:0;transform:translateY(10px);}
+[data-theme="dark"] .reveal-cta{color:#0f0f12;}
+.reveal-cta:hover{filter:brightness(1.1);transform:translateY(-1px);}
+
+/* RESULTS */
+.rwrap{max-width:920px;margin:0 auto;padding:44px 24px 100px;}
+.res-hero{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 32px;margin-bottom:20px;box-shadow:0 2px 12px var(--shadow);position:relative;overflow:hidden;}
+.res-hero::before{content:'';position:absolute;top:-60px;right:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,var(--accent-bg) 0%,transparent 65%);}
+.res-over{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:10px;}
+.res-ideo-name{font-family:'Fraunces',serif;font-size:clamp(1.9rem,5vw,2.8rem);font-weight:700;letter-spacing:-.03em;color:var(--accent);font-style:italic;margin-bottom:12px;}
+.res-ideo-plain{font-size:1rem;color:var(--muted);line-height:1.7;max-width:640px;margin-bottom:20px;}
+.res-mtag{display:inline-flex;align-items:center;font-size:.67rem;font-weight:700;padding:3px 10px;border-radius:10px;}
+.res-one-liner{font-size:1.05rem;font-weight:500;line-height:1.65;padding:16px 20px;border-radius:10px;background:var(--surface2);border-left:3px solid var(--accent);margin-top:16px;}
+
+.rg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;}
+.rf{grid-column:1/-1;}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:24px;box-shadow:0 1px 6px var(--shadow);}
+.ct{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin-bottom:18px;display:flex;align-items:center;gap:7px;}
+.ctd{width:6px;height:6px;border-radius:50%;}
+
+/* POLITICAL COMPASS */
+.compass-outer{position:relative;width:100%;max-width:500px;margin:0 auto;}
+#compassCanvas{display:block;width:100%;height:auto;border-radius:8px;cursor:crosshair;}
+.compass-intro{font-size:.82rem;color:var(--muted);line-height:1.65;margin-bottom:16px;}
+.compass-hover-tip{display:none;position:fixed;background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:.78rem;padding:7px 12px;border-radius:7px;pointer-events:none;z-index:9999;font-family:'Outfit',sans-serif;box-shadow:0 4px 14px var(--shadow2);font-weight:600;}
+
+/* FIGURES TABLE (below compass) */
+.fig-table-wrap{margin-top:20px;}
+.fig-table-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;display:flex;align-items:center;gap:7px;}
+.fig-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.fig-card{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.fig-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.fig-name{font-size:.8rem;font-weight:600;flex:1;}
+.fig-pos{font-size:.68rem;color:var(--muted);margin-top:1px;}
+
+/* AXIS CARDS — redesigned for clarity */
+.axis-cards{display:flex;flex-direction:column;gap:14px;}
+.axis-card{border-radius:12px;padding:20px;border:1px solid var(--border);background:var(--surface2);}
+.axis-card-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.axis-card-icon{font-size:1.3rem;}
+.axis-card-title{font-size:.95rem;font-weight:700;}
+.axis-card-score{margin-left:auto;font-size:.9rem;font-weight:700;display:flex;align-items:center;gap:6px;}
+.axis-score-arrow{font-size:1rem;}
+
+/* The bar with clearly labeled ends */
+.axis-bar-section{margin-bottom:12px;}
+.axis-bar-end-labels{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.axis-end-label{font-size:.72rem;font-weight:700;color:var(--muted2);}
+.axis-end-label.active{color:var(--text);}
+.axis-bar-track{height:10px;background:var(--border);border-radius:5px;position:relative;}
+.axis-bar-mid{position:absolute;left:50%;top:-3px;bottom:-3px;width:2px;background:var(--border2);border-radius:1px;}
+.axis-bar-fill{position:absolute;height:100%;border-radius:5px;transition:width 1s cubic-bezier(.34,1.56,.64,1);}
+/* You-marker on bar */
+.axis-bar-marker{position:absolute;top:50%;transform:translate(-50%,-50%);width:16px;height:16px;border-radius:50%;border:3px solid #fff;box-shadow:0 1px 6px rgba(0,0,0,.25);transition:left 1s cubic-bezier(.34,1.56,.64,1);}
+
+.axis-what{font-size:.8rem;color:var(--muted);line-height:1.6;padding:10px 14px;background:var(--surface);border-radius:8px;border:1px solid var(--border);margin-bottom:10px;}
+.axis-what strong{color:var(--text);}
+.axis-verdict{font-size:.84rem;line-height:1.62;font-weight:500;}
+.axis-verdict strong{font-weight:700;}
+
+/* IDEOLOGY LIST */
+.idlist{display:flex;flex-direction:column;gap:9px;}
+.idrow{display:flex;align-items:center;gap:9px;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;}
+.idrow.you{border-color:var(--accent);background:var(--accent-bg);}
+.iddot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.idnm{font-size:.84rem;font-weight:500;flex:1;}
+.idmb{font-size:.65rem;font-weight:700;padding:2px 8px;border-radius:8px;}
+.idpct{font-size:.72rem;color:var(--muted);font-weight:500;}
+.ideo-note{font-size:.74rem;color:var(--muted);margin-top:12px;line-height:1.5;}
+
+/* COMMUNITY */
+.cg3x{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-bottom:16px;}
+.ccard{background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:13px;text-align:center;}
+.cnum{font-family:'Fraunces',serif;font-size:1.3rem;font-weight:700;letter-spacing:-.02em;margin-bottom:2px;}
+.clbl{font-size:.62rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;}
+.ctbl{width:100%;border-collapse:collapse;}
+.ctbl th{font-size:.62rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted2);padding:0 6px 9px;text-align:left;}
+.ctbl td{font-size:.78rem;padding:8px 6px;border-top:1px solid var(--border);vertical-align:middle;}
+.cflag{font-size:.95rem;margin-right:4px;}
+.cnm{font-weight:500;}
+.mb{width:66px;height:5px;background:var(--border);border-radius:3px;overflow:hidden;display:inline-block;vertical-align:middle;}
+.mbf{height:100%;border-radius:3px;}
+.yrow td{color:var(--accent);font-weight:700;}
+
+/* SIMILAR FIGURES TABLE */
+.fig-sim-list{display:flex;flex-direction:column;gap:8px;margin-top:12px;}
+.fig-sim-row{display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;}
+.fig-sim-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;}
+.fig-sim-name{font-size:.84rem;font-weight:600;flex:1;}
+.fig-sim-pct{font-size:.72rem;color:var(--muted);font-weight:500;}
+.fig-sim-you{border-color:var(--accent);background:var(--accent-bg);}
+
+/* SHARE */
+.spr{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:26px;margin-bottom:14px;box-shadow:0 1px 6px var(--shadow);}
+.splbl{font-family:'Fraunces',serif;font-size:.75rem;color:var(--muted);margin-bottom:4px;}
+.spid{font-family:'Fraunces',serif;font-size:1.45rem;font-weight:700;color:var(--accent);letter-spacing:-.02em;font-style:italic;margin-bottom:14px;}
+.sppills{display:flex;flex-wrap:wrap;gap:6px;}
+.sppill{font-size:.68rem;font-weight:600;padding:4px 10px;border-radius:9px;border:1px solid;}
+.sbtns{display:flex;gap:9px;flex-wrap:wrap;}
+.sbtn{background:var(--surface2);border:1px solid var(--border2);color:var(--text);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;padding:9px 16px;border-radius:7px;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .14s;}
+.sbtn:hover{border-color:var(--accent);color:var(--accent);}
+.sbtn-mode{background:transparent;border:1px solid var(--accent-border);color:var(--accent);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;padding:9px 16px;border-radius:7px;cursor:pointer;transition:all .14s;}
+.sbtn-mode:hover{background:var(--accent-bg);}
+.sbtn-rt{background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:500;padding:9px 16px;border-radius:7px;cursor:pointer;transition:all .14s;}
+.sbtn-rt:hover{color:var(--text);border-color:var(--muted2);}
+.rnote{font-size:.68rem;color:var(--muted2);line-height:1.6;margin-top:14px;padding-top:16px;border-top:1px solid var(--border);}
+
+/* TOOLTIPS */
+.tip{display:inline;position:relative;border-bottom:1.5px dotted var(--accent);cursor:help;color:inherit;}
+.tip-box{display:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--surface);border:1px solid var(--border2);color:var(--text);font-size:.76rem;font-weight:400;line-height:1.5;padding:9px 13px;border-radius:8px;white-space:normal;width:230px;z-index:999;box-shadow:0 4px 16px var(--shadow2);pointer-events:none;font-family:'Outfit',sans-serif;}
+.tip-box::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:6px solid transparent;border-top-color:var(--border2);}
+.tip:hover .tip-box{display:block;}
+.tip-box.tl{left:0;transform:none;}.tip-box.tl::after{left:20px;}
+.tip-box.tr{left:auto;right:0;transform:none;}.tip-box.tr::after{left:auto;right:20px;}
+
+@keyframes fu{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fu .45s ease both;}.fu2{animation:fu .45s .08s ease both;}.fu3{animation:fu .45s .16s ease both;}
+
+@media(max-width:700px){.rg{grid-template-columns:1fr;}.mode-grid{grid-template-columns:1fr;}.cg3x{grid-template-columns:1fr 1fr;}.hdr{padding:0 14px;}.fig-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:860px) and (min-width:501px){.mode-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.srow{gap:5px;}.sopt{padding:10px 3px 8px;font-size:.68rem;}}
+</style>
+</head>
+<body>
+
+<!-- HOVER TOOLTIP for compass -->
+<div class="compass-hover-tip" id="compassTip"></div>
+
+<!-- CONFIRM MODAL -->
+<div id="confirmOverlay" style="display:none;position:fixed;inset:0;z-index:9000;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:24px;">
+  <div style="background:var(--surface);border:1px solid var(--border2);border-radius:14px;padding:28px 28px 22px;max-width:360px;width:100%;box-shadow:0 8px 32px rgba(0,0,0,.3);">
+    <div id="confirmTitle" style="font-family:'Fraunces',serif;font-size:1.2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:8px;"></div>
+    <div id="confirmBody" style="font-size:.88rem;color:var(--muted);line-height:1.55;margin-bottom:22px;"></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button id="confirmNo" style="background:transparent;border:1px solid var(--border2);color:var(--muted);font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:500;padding:9px 20px;border-radius:7px;cursor:pointer;">Cancel</button>
+      <button id="confirmYes" style="background:var(--accent);color:#1a1814;border:none;font-family:'Outfit',sans-serif;font-size:.85rem;font-weight:700;padding:9px 20px;border-radius:7px;cursor:pointer;">Yes, go home</button>
+    </div>
+  </div>
+</div>
+
+<header class="hdr">
+  <div class="hdr-logo" onclick="goHome()" style="cursor:pointer;user-select:none;" title="← Home">Compass<span>.</span></div>
+  <div class="hdr-prog" id="hdrProg">
+    <div class="hdr-track"><div class="hdr-fill" id="hdrFill"></div></div>
+    <div class="hdr-count" id="hdrCount"></div>
+  </div>
+  <div class="hdr-tag" id="hdrTag"></div>
+  <div class="hdr-right">
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Toggle dark/light mode">🌙</button>
+    <button class="hdr-back" id="hdrBack" onclick="goHome()">← Change Mode</button>
+  </div>
+</header>
+
+<!-- LANDING -->
+<section class="sec on" id="secLand">
+<div class="land">
+  <div class="land-bg"></div><div class="land-grid"></div>
+  <div class="land-inner fu">
+    <div class="eyebrow">Political Self-Knowledge</div>
+    <h1>Where do you <em>actually</em> stand?</h1>
+    <p class="land-sub">Five clear dimensions. Three test lengths. Plain-English results — then see how you compare to people and figures around the world.</p>
+    <div class="pills">
+      <div class="pill pe"><div class="pdot"></div>💰 Economic</div>
+      <div class="pill ps"><div class="pdot"></div>🏛 Social</div>
+      <div class="pill pc"><div class="pdot"></div>⚖️ Civil Liberties</div>
+      <div class="pill pg"><div class="pdot"></div>🌍 Governance</div>
+      <div class="pill psy"><div class="pdot"></div>🔎 System Trust ✦</div>
+    </div>
+    <p class="mode-hdg">Choose your test length</p>
+    <div class="mode-grid">
+      <div class="mc" onclick="startMode('quick')">
+        <div class="mbadge bq">Quick</div>
+        <div class="mcount" style="color:var(--civil)">30</div>
+        <div class="mqlbl">questions</div>
+        <div class="mname">The Snapshot</div>
+        <div class="mdesc">The most telling questions from every dimension, fully mixed so it never feels repetitive.</div>
+        <div class="mtime">About 4–5 minutes</div>
+        <button class="msbtn">Start Quick Test →</button>
+      </div>
+      <div class="mc star" onclick="startMode('medium')">
+        <div class="mbadge bm">★ Recommended</div>
+        <div class="mcount" style="color:var(--accent)">50</div>
+        <div class="mqlbl">questions</div>
+        <div class="mname">The Standard</div>
+        <div class="mdesc">The sweet spot. Thorough, nuanced, fully mixed — gets you the most detailed breakdown.</div>
+        <div class="mtime">About 7–9 minutes</div>
+        <button class="msbtn">Start Standard Test →</button>
+      </div>
+      <div class="mc" onclick="startMode('deep')">
+        <div class="mbadge bd">In-Depth</div>
+        <div class="mcount" style="color:var(--system)">80</div>
+        <div class="mqlbl">questions</div>
+        <div class="mname">The Deep Dive</div>
+        <div class="mdesc">Every question in the bank, fully mixed. Covers edge cases for the most accurate result.</div>
+        <div class="mtime">About 12–15 minutes</div>
+        <button class="msbtn">Start Deep Dive →</button>
+      </div>
+    </div>
+    <p class="land-note">Anonymous · No account needed · Nothing stored externally</p>
+  </div>
+</div>
+</section>
+
+<!-- QUESTION -->
+<section class="sec" id="secQ">
+<div class="qwrap">
+  <div class="qmeta">
+    <div class="qcat"><div class="qcdot" id="qDot"></div><span id="qCat"></span></div>
+    <div class="qnum" id="qNum"></div>
+  </div>
+  <div class="qtext" id="qText"></div>
+  <div class="shdr"><span>Strongly Agree</span><span>Strongly Disagree</span></div>
+  <div class="srow">
+    <button class="sopt" onclick="ans(0)"><div class="spip"></div>Strongly Agree</button>
+    <button class="sopt" onclick="ans(1)"><div class="spip"></div>Agree</button>
+    <button class="sopt" onclick="ans(2)"><div class="spip"></div>Neutral</button>
+    <button class="sopt" onclick="ans(3)"><div class="spip"></div>Disagree</button>
+    <button class="sopt" onclick="ans(4)"><div class="spip"></div>Strongly Disagree</button>
+  </div>
+  <div class="qnav">
+    <button class="bbk" id="bbk" onclick="prevQ()" disabled>← Back</button>
+    <button class="bnx" id="bnx" onclick="nextQ()" disabled>Next →</button>
+  </div>
+  <p class="qhint">Your answers never leave this page.</p>
+</div>
+</section>
+
+<!-- REVEAL -->
+<section class="sec" id="secReveal">
+<div class="reveal-wrap">
+  <div class="reveal-bg"></div>
+  <div class="reveal-content">
+    <div class="reveal-eyebrow" id="revEyebrow">Your Political Profile</div>
+    <div class="reveal-name" id="revName"></div>
+    <div class="reveal-tagline" id="revTagline"></div>
+    <div class="reveal-axes" id="revAxes"></div>
+    <button class="reveal-cta" id="revCta" onclick="showFullResults()">See Full Analysis →</button>
+  </div>
+</div>
+</section>
+
+<!-- RESULTS -->
+<section class="sec" id="secRes">
+<div class="rwrap">
+
+  <div class="res-hero fu">
+    <div class="res-over">Full Analysis</div>
+    <div class="res-ideo-name" id="rIdeo"></div>
+    <div class="res-ideo-plain" id="rIdeoDef"></div>
+    <span class="res-mtag" id="rMtag"></span>
+    <div class="res-one-liner" id="rOneLiner"></div>
+  </div>
+
+  <!-- Compass + similar figures -->
+  <div class="card rf fu2" style="margin-bottom:16px;">
+    <div class="ct"><div class="ctd" style="background:var(--econ)"></div>The Political Compass — Where Do You Land?</div>
+    <p class="compass-intro">
+      The political compass plots your <strong>economic views</strong> (left = government should reduce inequality; right = free markets) against your <strong>social views</strong>
+      (<span class="tip">libertarian<span class="tip-box">Believes in maximum personal freedom and minimal government control over how people live.</span></span> = more personal freedom at the top;
+      <span class="tip">authoritarian<span class="tip-box">Believes strong government control and social order are necessary, even if it limits some personal freedom.</span></span> = more order at the bottom).
+      <strong>Hover over any dot</strong> to see who it is.
+    </p>
+    <div class="compass-outer">
+      <canvas id="compassCanvas" width="500" height="500"></canvas>
+    </div>
+    <div class="compass-coords" id="compassCoords" style="display:none;margin-top:14px;text-align:center;padding:10px 16px;background:var(--surface2);border:1px solid var(--border);border-radius:8px;font-size:.82rem;color:var(--muted);line-height:1.6;">
+      Your coordinates: <strong id="coordText" style="color:var(--text);font-family:'Fraunces',serif;letter-spacing:.02em;"></strong>
+      <span style="font-size:.72rem;margin-left:8px;">(share this with friends to compare!)</span>
+    </div>
+    <div class="fig-table-wrap">
+      <div class="fig-table-title"><div class="ctd" style="background:var(--accent);display:inline-block"></div>Most Similar Historical Figures to You</div>
+      <div class="fig-sim-list" id="figSimList"></div>
+    </div>
+  </div>
+
+  <div class="rg">
+    <!-- Axis cards -->
+    <div class="card rf fu3">
+      <div class="ct"><div class="ctd" style="background:var(--accent)"></div>Your Five Dimensions Explained</div>
+      <div class="axis-cards" id="axisCards"></div>
+    </div>
+
+    <!-- Ideology -->
+    <div class="card fu">
+      <div class="ct"><div class="ctd" style="background:var(--system)"></div>Closest Political Ideologies</div>
+      <div class="idlist" id="idList"></div>
+      <p class="ideo-note">These are established political traditions your answers most closely match. Think of them as nearby neighborhoods on the political map — most people blend elements of several.</p>
+    </div>
+
+    <!-- Community -->
+    <div class="card fu2">
+      <div class="ct"><div class="ctd" style="background:var(--social)"></div>How You Compare Globally</div>
+      <div class="cg3x">
+        <div class="ccard"><div class="cnum" id="cPct" style="color:var(--accent)">—</div><div class="clbl">More left-wing than you</div></div>
+        <div class="ccard"><div class="cnum" id="cRight" style="color:var(--social)">—</div><div class="clbl">More right-wing than you</div></div>
+        <div class="ccard"><div class="cnum" id="cClose" style="color:var(--civil)">—</div><div class="clbl">Closest country</div></div>
+      </div>
+      <table class="ctbl" id="cTbl"></table>
+    </div>
+
+    <!-- Share -->
+    <div class="rf fu3">
+      <div class="ct" style="margin-bottom:12px"><div class="ctd" style="background:var(--gov);display:inline-block"></div>Share Your Results</div>
+      <div class="spr">
+        <div class="splbl">My Political Compass Results</div>
+        <div class="spid" id="spId"></div>
+        <div class="sppills" id="spPills"></div>
+      </div>
+      <div class="sbtns">
+        <button class="sbtn" onclick="copyRes()">⧉ Copy Results</button>
+        <button class="sbtn" onclick="shareTw()">𝕏 Share on X</button>
+        <button class="sbtn-mode" onclick="goHome()">↕ Try Different Length</button>
+        <button class="sbtn-rt" onclick="retake()">↺ Retake</button>
+      </div>
+    </div>
+  </div>
+
+  <p class="rnote"><strong style="color:var(--muted)">A note on these results:</strong> No test can fully capture the complexity of your political views. Treat this as a starting point for reflection, not a definitive label. Historical figure placements are broadly accepted academic estimates — reasonable people can debate exact positions. Country comparison data is modelled on published global survey research. No personal data is collected.</p>
+</div>
+</section>
+
+<script>
+// ══ THEME ══
+function toggleTheme(){
+  const h=document.documentElement,dark=h.getAttribute('data-theme')==='dark';
+  h.setAttribute('data-theme',dark?'light':'dark');
+  document.getElementById('themeToggle').textContent=dark?'🌙':'☀️';
+  // redraw compass if visible
+  if(cachedScores&&document.getElementById('secRes').classList.contains('on'))
+    setTimeout(()=>drawCompass(cachedScores),40);
+}
+
+// ══ QUESTIONS ══
+const AQ=[
+  {t:"Wealthy individuals and corporations should pay significantly higher taxes to fund public services.",a:"💰 Economic",x:"econ",d:1,tier:1},
+  {t:"Free markets, with minimal government interference, are the most reliable engine of prosperity.",a:"💰 Economic",x:"econ",d:-1,tier:1},
+  {t:"The government should provide universal healthcare as a public service.",a:"💰 Economic",x:"econ",d:1,tier:1},
+  {t:"Reducing business regulations creates more jobs and benefits the broader economy.",a:"💰 Economic",x:"econ",d:-1,tier:1},
+  {t:"A robust social safety net — housing, food, and income support — is a core government responsibility.",a:"💰 Economic",x:"econ",d:1,tier:2},
+  {t:"People are primarily responsible for their own financial situation, not the state.",a:"💰 Economic",x:"econ",d:-1,tier:2},
+  {t:"The government should actively work to close the wealth gap between the richest and poorest.",a:"💰 Economic",x:"econ",d:1,tier:2},
+  {t:"Lower taxes and less government spending generally lead to better economic outcomes.",a:"💰 Economic",x:"econ",d:-1,tier:2},
+  {t:"Workers' unions are essential for protecting employees from exploitation.",a:"💰 Economic",x:"econ",d:1,tier:2},
+  {t:"Competition between private companies drives innovation more effectively than government programs.",a:"💰 Economic",x:"econ",d:-1,tier:2},
+  {t:"Large corporations wield too much power and need stricter government oversight.",a:"💰 Economic",x:"econ",d:1,tier:3},
+  {t:"Inheritance allows families to build generational wealth and should largely remain untaxed.",a:"💰 Economic",x:"econ",d:-1,tier:3},
+  {t:"Public universities should be free or heavily subsidized by the government.",a:"💰 Economic",x:"econ",d:1,tier:3},
+  {t:"Minimum wage laws often reduce employment and do more harm than good.",a:"💰 Economic",x:"econ",d:-1,tier:3},
+  {t:"The government should take an active role in developing key industries and infrastructure.",a:"💰 Economic",x:"econ",d:1,tier:3},
+  {t:"Economic inequality is a natural outcome of a free society and not inherently unjust.",a:"💰 Economic",x:"econ",d:-1,tier:3},
+  {t:"The government has too much control over how people live their private lives.",a:"🏛 Social",x:"social",d:1,tier:1},
+  {t:"Traditional social structures — family, religion, community norms — provide essential stability.",a:"🏛 Social",x:"social",d:-1,tier:1},
+  {t:"Drug use between consenting adults should not be criminalized.",a:"🏛 Social",x:"social",d:1,tier:1},
+  {t:"Maintaining public order sometimes requires authorities to use significant force.",a:"🏛 Social",x:"social",d:-1,tier:1},
+  {t:"People should be free to live however they choose, as long as they don't directly harm others.",a:"🏛 Social",x:"social",d:1,tier:2},
+  {t:"Stricter policing and longer sentences are effective tools for reducing crime.",a:"🏛 Social",x:"social",d:-1,tier:2},
+  {t:"Society progresses most when citizens question and reform existing authority structures.",a:"🏛 Social",x:"social",d:1,tier:2},
+  {t:"Respect for authority and social hierarchy is a virtue that holds communities together.",a:"🏛 Social",x:"social",d:-1,tier:2},
+  {t:"Sex work between consenting adults should be legal and regulated.",a:"🏛 Social",x:"social",d:1,tier:2},
+  {t:"A strong central government is often necessary to solve society's major challenges.",a:"🏛 Social",x:"social",d:-1,tier:2},
+  {t:"Peaceful protests that disrupt daily life are a legitimate form of political expression.",a:"🏛 Social",x:"social",d:1,tier:3},
+  {t:"National security concerns should generally take precedence over most other policy areas.",a:"🏛 Social",x:"social",d:-1,tier:3},
+  {t:"Religious institutions should have no special influence over government policy.",a:"🏛 Social",x:"social",d:1,tier:3},
+  {t:"Children should be taught to respect authority figures before learning to question them.",a:"🏛 Social",x:"social",d:-1,tier:3},
+  {t:"The state should not define what constitutes a family or an acceptable relationship structure.",a:"🏛 Social",x:"social",d:1,tier:3},
+  {t:"Social stability is more important than rapidly expanding individual freedoms.",a:"🏛 Social",x:"social",d:-1,tier:3},
+  {t:"Government mass surveillance programs are a serious threat to a free society.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:1},
+  {t:"In genuine national emergencies, temporary restrictions on civil liberties can be justified.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:1},
+  {t:"The rights of accused individuals should be strongly protected throughout the justice process.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:1},
+  {t:"Governments should be able to detain terrorism suspects without a full trial.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:1},
+  {t:"Privacy from government intrusion is a fundamental right that should rarely be compromised.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2},
+  {t:"Laws restricting hate speech are necessary to protect vulnerable communities from harm.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2},
+  {t:"A free press, even one critical of the government, is essential to democracy.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2},
+  {t:"Mandatory health interventions can be justified to protect public health.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2},
+  {t:"People should have the right to encrypt their communications without government access.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:2},
+  {t:"The government should be allowed to monitor social media to identify potential threats.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:2},
+  {t:"Whistleblowers who expose government wrongdoing should be legally protected.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3},
+  {t:"In serious criminal cases, coercive interrogation techniques can sometimes be justified.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3},
+  {t:"Citizens should be able to access all non-classified government information on request.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3},
+  {t:"Public safety sometimes outweighs the rights of individual suspects.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3},
+  {t:"The right to protest, even disruptively, must be robustly protected.",a:"⚖️ Civil Liberties",x:"civil",d:1,tier:3},
+  {t:"Platforms and media companies can reasonably restrict speech that promotes harm.",a:"⚖️ Civil Liberties",x:"civil",d:-1,tier:3},
+  {t:"International institutions like the UN are vital for a stable and fair global order.",a:"🌍 Governance",x:"gov",d:1,tier:1},
+  {t:"Countries should prioritize their own citizens' interests above international obligations.",a:"🌍 Governance",x:"gov",d:-1,tier:1},
+  {t:"Immigration overall benefits host countries economically and culturally.",a:"🌍 Governance",x:"gov",d:1,tier:1},
+  {t:"Controlling borders and limiting immigration is essential for protecting national identity.",a:"🌍 Governance",x:"gov",d:-1,tier:1},
+  {t:"Addressing climate change requires global cooperation, even if it limits national sovereignty.",a:"🌍 Governance",x:"gov",d:1,tier:2},
+  {t:"Global trade agreements often undermine domestic workers and national industries.",a:"🌍 Governance",x:"gov",d:-1,tier:2},
+  {t:"Countries have a responsibility to accept refugees fleeing war and persecution.",a:"🌍 Governance",x:"gov",d:1,tier:2},
+  {t:"A country's military should serve national interests, not international ones.",a:"🌍 Governance",x:"gov",d:-1,tier:2},
+  {t:"Cultural diversity, including from immigration, generally strengthens societies.",a:"🌍 Governance",x:"gov",d:1,tier:2},
+  {t:"Preserving a nation's distinct cultural identity is a legitimate and important government goal.",a:"🌍 Governance",x:"gov",d:-1,tier:2},
+  {t:"Wealthy nations have a moral obligation to provide substantial foreign aid to poorer ones.",a:"🌍 Governance",x:"gov",d:1,tier:3},
+  {t:"Nations that prioritize their own growth benefit the world more than those sacrificing it for global agreements.",a:"🌍 Governance",x:"gov",d:-1,tier:3},
+  {t:"Multinational corporations should be subject to binding international regulations.",a:"🌍 Governance",x:"gov",d:1,tier:3},
+  {t:"National sovereignty should be respected above international law in most cases.",a:"🌍 Governance",x:"gov",d:-1,tier:3},
+  {t:"A world with fewer borders and more freedom of movement would be better for humanity.",a:"🌍 Governance",x:"gov",d:1,tier:3},
+  {t:"National pride and patriotism are important forces that bind societies together.",a:"🌍 Governance",x:"gov",d:-1,tier:3},
+  {t:"Elections in democratic countries generally reflect the genuine will of the people.",a:"🔎 System Trust",x:"system",d:1,tier:1},
+  {t:"Mainstream media outlets are fundamentally biased and cannot be trusted to report fairly.",a:"🔎 System Trust",x:"system",d:-1,tier:1},
+  {t:"Scientific consensus on major issues should guide public policy.",a:"🔎 System Trust",x:"system",d:1,tier:1},
+  {t:"Most politicians, regardless of party, primarily serve the interests of the wealthy and powerful.",a:"🔎 System Trust",x:"system",d:-1,tier:1},
+  {t:"Courts and the legal system, despite imperfections, broadly deliver justice.",a:"🔎 System Trust",x:"system",d:1,tier:2},
+  {t:"Large corporations and governments work together to control information the public receives.",a:"🔎 System Trust",x:"system",d:-1,tier:2},
+  {t:"Experts and professional institutions generally give reliable guidance on complex issues.",a:"🔎 System Trust",x:"system",d:1,tier:2},
+  {t:"The 'deep state' — the idea that unelected officials secretly run policy regardless of elected leaders — is a real and serious problem.",a:"🔎 System Trust",x:"system",d:-1,tier:2},
+  {t:"Civil society organizations — like the Red Cross, Amnesty International, or local advocacy groups — are a healthy part of democracy.",a:"🔎 System Trust",x:"system",d:1,tier:2},
+  {t:"Official government statistics are routinely manipulated to serve political agendas.",a:"🔎 System Trust",x:"system",d:-1,tier:2},
+  {t:"Universities and academic institutions are broadly trustworthy sources of knowledge.",a:"🔎 System Trust",x:"system",d:1,tier:3},
+  {t:"Voting in elections rarely produces meaningful change for ordinary people.",a:"🔎 System Trust",x:"system",d:-1,tier:3},
+  {t:"International health organizations like the WHO (World Health Organization) generally act in the public interest.",a:"🔎 System Trust",x:"system",d:1,tier:3},
+  {t:"Financial systems are rigged to benefit those already wealthy at the expense of everyone else.",a:"🔎 System Trust",x:"system",d:-1,tier:3},
+  {t:"Police and law enforcement generally operate in good faith to protect communities.",a:"🔎 System Trust",x:"system",d:1,tier:3},
+  {t:"The political system is so broken that real change requires working entirely outside of it.",a:"🔎 System Trust",x:"system",d:-1,tier:3},
+];
+
+// ══ MODES & BUILD ══
+const MODES={
+  quick:{label:"Quick · 30 Qs",color:"var(--civil)",bg:"var(--civil-bg)",count:30},
+  medium:{label:"Standard · 50 Qs",color:"var(--accent)",bg:"var(--accent-bg)",count:50},
+  deep:{label:"Deep Dive · 80 Qs",color:"var(--system)",bg:"var(--system-bg)",count:80},
+};
+function buildSet(m){
+  const perAxis=m==='quick'?6:m==='medium'?10:16;
+  const axes=['econ','social','civil','gov','system'];
+  const buckets=axes.map(ax=>AQ.filter(q=>q.x===ax).sort((a,b)=>a.tier-b.tier).slice(0,perAxis));
+  const out=[],ml=Math.max(...buckets.map(b=>b.length));
+  for(let i=0;i<ml;i++) buckets.forEach(b=>{if(b[i])out.push(b[i]);});
+  return out;
+}
+
+// ══ AXIS META ══
+const AXES={
+  econ:{label:"Economic",icon:"💰",
+    cL:'#2860c8',cD:'#5b8dee',
+    leftShort:"Left-wing",rightShort:"Right-wing",
+    leftFull:"left-wing",rightFull:"right-wing",
+    leftDef:"Favors government action to reduce inequality, fund public services, and regulate markets.",
+    rightDef:"Favors free markets, lower taxes, less regulation, and people taking responsibility for their own outcomes.",
+    centerDef:"Balanced on economics — you see merit in both market solutions and some government involvement.",
+    what:"<strong>What is this?</strong> This measures your views on money, taxes, and the economy. Do you think the government should step in to reduce inequality and provide services? Or should markets and individuals be left to sort things out?"},
+  social:{label:"Social",icon:"🏛",
+    cL:'#c83828',cD:'#e05c5c',
+    leftShort:"Libertarian",rightShort:"Authoritarian",
+    leftFull:"libertarian",rightFull:"authoritarian",
+    leftDef:"Believes people should be free to live how they want with minimal government or societal control over personal choices.",
+    rightDef:"Values order, tradition, and strong governance — believes some authority is necessary for a stable, functioning society.",
+    centerDef:"Balanced — you value both personal freedom and some degree of order and structure.",
+    what:"<strong>What is this?</strong> How much control should government and society have over how people live? Maximum individual freedom? Or is some authority necessary to keep society working?"},
+  civil:{label:"Civil Liberties",icon:"⚖️",
+    cL:'#1e9c50',cD:'#5ce07a',
+    leftShort:"Pro-Liberty",rightShort:"Security-First",
+    leftFull:"pro-liberty",rightFull:"security-first",
+    leftDef:"Strongly prioritizes individual rights — wary of surveillance, protective of privacy and due process, resistant to state overreach.",
+    rightDef:"More willing to accept restrictions on rights for security or public welfare — believes safety sometimes comes before individual freedoms.",
+    centerDef:"Balanced — you weigh rights and security on a case-by-case basis.",
+    what:"<strong>What is this?</strong> How do you weigh individual rights against security? Should people's privacy and freedoms be almost untouchable? Or can the government sometimes limit rights for the greater good?"},
+  gov:{label:"Governance",icon:"🌍",
+    cL:'#c8872a',cD:'#e8c547',
+    leftShort:"Globalist",rightShort:"Nationalist",
+    leftFull:"globalist",rightFull:"nationalist",
+    leftDef:"Values international cooperation, open borders, and shared solutions to global challenges like climate change.",
+    rightDef:"Believes countries should put their own people first and is skeptical of international agreements limiting national control.",
+    centerDef:"Pragmatic — open to international cooperation but also believes national interests genuinely matter.",
+    what:"<strong>What is this?</strong> Should nations work together under shared rules? Or should they protect their own identity, economy, and sovereignty first?"},
+  system:{label:"System Trust",icon:"🔎",
+    cL:'#8c38c8',cD:'#c47de8',
+    leftShort:"High Trust",rightShort:"Low Trust",
+    leftFull:"high trust",rightFull:"low trust",
+    leftDef:"Broadly believes that elections, media, courts, science, and government — while imperfect — are mostly legitimate and working.",
+    rightDef:"Skeptical of mainstream institutions — doesn't fully trust media, political processes, or official narratives, and believes the system is rigged against ordinary people.",
+    centerDef:"Mixed feelings — trusts some institutions, questions others, judges case by case.",
+    what:"<strong>What is this?</strong> This dimension is unique to this test. Do you trust that the systems around you — elections, media, science, courts — are basically working? Or do you think they're corrupted and designed to serve the powerful?"},
+};
+
+// ══ IDEOLOGIES ══
+const IDEO=[
+  {n:"Progressive Left",     s:[-75,-60,60,50,40], c:"#2860c8",def:"Believes in strong government action to reduce inequality, expand rights, and tackle systemic injustice. Associated with figures like Bernie Sanders or Jeremy Corbyn."},
+  {n:"Social Democrat",      s:[-55,-30,40,40,50], c:"#5b8dee",def:"Supports a generous welfare state and regulated capitalism within democratic institutions. Common in Scandinavia — think Sweden or Germany's political mainstream."},
+  {n:"Classical Liberal",    s:[-10,-65,75,10,55], c:"#1e9c50",def:"Prioritizes individual freedom above all — both economic freedom and personal liberty. The original meaning of 'liberal' before it shifted in US politics."},
+  {n:"Libertarian",          s:[40,-70,80,0,30],   c:"#c8872a",def:"Wants minimal government in both the economy and personal life — maximum individual freedom. 'Get the government out of my wallet and my bedroom.'"},
+  {n:"Moderate Conservative",s:[40,25,-10,-30,40], c:"#e8a060",def:"Favors free markets and gradual change, but accepts some social order and government functions. The traditional center-right."},
+  {n:"Social Conservative",  s:[20,65,-40,-50,35], c:"#c83828",def:"Emphasizes traditional values, strong community norms, and cultural continuity. May support some economic help for communities but wants strong social norms maintained."},
+  {n:"Nationalist Right",    s:[15,55,-30,-80,-30],c:"#8b0000",def:"Prioritizes national identity and sovereignty, highly skeptical of immigration and globalism. Associated with figures like Marine Le Pen or Viktor Orbán."},
+  {n:"Authoritarian Left",   s:[-70,60,-50,20,-20],c:"#8c38c8",def:"Supports collective economic control and equality, but through strong centralized power. Think Soviet-style communism or Maoist China."},
+  {n:"Left Populist",        s:[-50,10,20,-30,-60],c:"#5cb8e0",def:"Deeply distrusts elites and big institutions, but wants more economic redistribution. Blends economic left with anti-establishment distrust."},
+  {n:"Right Populist",       s:[20,40,-20,-60,-65],c:"#e08040",def:"Distrusts elites and mainstream institutions, puts national interests first. Think Trump, Bolsonaro, or Brexit — skeptical of 'the establishment.'"},
+  {n:"Technocrat",           s:[-5,10,10,40,75],   c:"#40b8a0",def:"Trusts experts and institutions to manage society through evidence and data. Believes complex policy should be handled by qualified specialists."},
+  {n:"Moderate Left",        s:[-30,-10,25,20,30], c:"#7baeff",def:"Leans left on economics and broadly supports personal freedoms, but takes a pragmatic rather than ideological approach. Common among center-left Democrats or UK Labour moderates."},
+  {n:"Moderate Right",       s:[25,15,-5,-15,35],  c:"#f0b070",def:"Leans right on economics with moderate social views. Broadly accepts democratic norms and institutions. Common among traditional Republicans or UK Conservatives."},
+];
+
+// ══ CURATED FAMOUS FIGURES (20 most globally recognizable) ══
+// [econ (-100=left, +100=right), social (-100=lib, +100=auth)]
+const FIGURES=[
+  {n:"Karl Marx",        e:-95, s:60,  c:"#e05c5c", desc:"German philosopher, founder of Marxism/Communism"},
+  {n:"Gandhi",           e:-40, s:-60, c:"#e8c547", desc:"Indian independence leader, advocate of nonviolence"},
+  {n:"Martin Luther King Jr.", e:-60, s:-50, c:"#5b8dee", desc:"American civil rights leader"},
+  {n:"Adolf Hitler",     e:-20, s:98,  c:"#555",    desc:"Nazi dictator of Germany"},
+  {n:"Joseph Stalin",    e:-80, s:98,  c:"#c83828", desc:"Soviet Union leader, authoritarian communist"},
+  {n:"Mao Zedong",       e:-90, s:90,  c:"#c83828", desc:"Founder of the People's Republic of China"},
+  {n:"Ronald Reagan",    e:70,  s:30,  c:"#e08040", desc:"40th US President, championed free markets"},
+  {n:"Margaret Thatcher",e:75,  s:45,  c:"#e08040", desc:"UK Prime Minister, advocate of free markets"},
+  {n:"Barack Obama",     e:-35, s:-30, c:"#5b8dee", desc:"44th US President, center-left Democrat"},
+  {n:"Donald Trump",     e:30,  s:65,  c:"#e05c5c", desc:"45th/47th US President, nationalist populist"},
+  {n:"Bernie Sanders",   e:-70, s:-35, c:"#2860c8", desc:"US Senator, democratic socialist"},
+  {n:"Nelson Mandela",   e:-55, s:-40, c:"#1e9c50", desc:"South African President, anti-apartheid leader"},
+  {n:"Ayn Rand",         e:90,  s:-75, c:"#c8872a", desc:"Philosopher, champion of free markets and individualism"},
+  {n:"Milton Friedman",  e:85,  s:-40, c:"#c8872a", desc:"Economist, free-market champion"},
+  {n:"Noam Chomsky",     e:-80, s:-65, c:"#2860c8", desc:"Linguist and left-wing political commentator"},
+  {n:"Che Guevara",      e:-80, s:55,  c:"#e05c5c", desc:"Marxist revolutionary leader"},
+  {n:"Fidel Castro",     e:-85, s:75,  c:"#c83828", desc:"Cuban revolutionary leader, communist"},
+  {n:"Emmanuel Macron",  e:10,  s:-5,  c:"#e8c547", desc:"French President, centrist"},
+  {n:"Viktor Orbán",     e:20,  s:80,  c:"#c83828", desc:"Hungarian Prime Minister, nationalist authoritarian"},
+  {n:"Angela Merkel",    e:5,   s:10,  c:"#e8a060", desc:"German Chancellor, center-right moderate"},
+];
+
+// ══ COUNTRIES ══
+const COU=[
+  {n:"Sweden",f:"🇸🇪",s:[-60,-30,50,55,65]},{n:"Norway",f:"🇳🇴",s:[-55,-40,55,55,70]},
+  {n:"Finland",f:"🇫🇮",s:[-50,-25,52,50,68]},{n:"Denmark",f:"🇩🇰",s:[-52,-28,54,52,70]},
+  {n:"Netherlands",f:"🇳🇱",s:[-25,-35,60,50,60]},{n:"Germany",f:"🇩🇪",s:[-40,-20,45,50,55]},
+  {n:"France",f:"🇫🇷",s:[-50,-15,40,40,35]},{n:"Spain",f:"🇪🇸",s:[-40,-10,38,35,30]},
+  {n:"Italy",f:"🇮🇹",s:[-20,20,25,20,15]},{n:"United Kingdom",f:"🇬🇧",s:[-20,-10,50,20,45]},
+  {n:"Ireland",f:"🇮🇪",s:[-35,-15,48,38,50]},{n:"Switzerland",f:"🇨🇭",s:[10,-20,55,10,60]},
+  {n:"Poland",f:"🇵🇱",s:[-10,45,-10,-25,20]},{n:"Hungary",f:"🇭🇺",s:[5,60,-20,-50,-20]},
+  {n:"Greece",f:"🇬🇷",s:[-30,20,15,10,5]},{n:"Russia",f:"🇷🇺",s:[5,65,-50,-50,-40]},
+  {n:"Ukraine",f:"🇺🇦",s:[-10,20,10,-20,10]},{n:"Turkey",f:"🇹🇷",s:[-5,55,-30,-30,-10]},
+  {n:"United States",f:"🇺🇸",s:[15,10,30,-20,20]},{n:"Canada",f:"🇨🇦",s:[-30,-20,55,35,50]},
+  {n:"Mexico",f:"🇲🇽",s:[-20,20,10,0,-25]},{n:"Brazil",f:"🇧🇷",s:[-10,30,-10,-10,-20]},
+  {n:"Argentina",f:"🇦🇷",s:[-45,10,20,10,-30]},{n:"Colombia",f:"🇨🇴",s:[-5,35,-5,-10,-25]},
+  {n:"Chile",f:"🇨🇱",s:[-15,15,20,10,-10]},{n:"Japan",f:"🇯🇵",s:[-10,20,30,10,40]},
+  {n:"South Korea",f:"🇰🇷",s:[-5,15,25,5,35]},{n:"China",f:"🇨🇳",s:[-20,70,-60,-30,10]},
+  {n:"India",f:"🇮🇳",s:[-5,40,-20,-15,5]},{n:"Indonesia",f:"🇮🇩",s:[-5,45,-15,-5,10]},
+  {n:"Australia",f:"🇦🇺",s:[-15,-10,45,20,45]},{n:"New Zealand",f:"🇳🇿",s:[-30,-20,52,30,55]},
+  {n:"Singapore",f:"🇸🇬",s:[20,40,-5,30,60]},{n:"Saudi Arabia",f:"🇸🇦",s:[10,75,-55,-30,10]},
+  {n:"Iran",f:"🇮🇷",s:[-10,70,-55,-20,-30]},{n:"Egypt",f:"🇪🇬",s:[-5,60,-35,-15,-15]},
+  {n:"Nigeria",f:"🇳🇬",s:[-5,50,-15,-10,-20]},{n:"South Africa",f:"🇿🇦",s:[-35,15,15,10,-15]},
+  {n:"Kenya",f:"🇰🇪",s:[-10,30,5,0,-10]},{n:"Ghana",f:"🇬🇭",s:[-10,35,10,5,5]},
+];
+
+// ══ TOOLTIPS ══
+const GLOSS={
+  'left-wing':'Favors government action to reduce inequality, fund public services, and regulate markets.',
+  'right-wing':'Favors free markets, lower taxes, less regulation, and personal economic responsibility.',
+  'libertarian':'Believes in maximum personal freedom and minimal government control over how people live.',
+  'authoritarian':'Believes strong government control and social order are necessary, even if it limits personal freedom.',
+  'globalist':'Believes countries should cooperate internationally, share governance, and have open trade and borders.',
+  'nationalist':'Believes a country should prioritize its own people, culture, and sovereignty over international agreements.',
+  'civil liberties':'Individual rights and freedoms that protect people from government overreach — like free speech, privacy, and due process.',
+  'due process':'The legal requirement that the government must respect all legal rights when depriving someone of life, liberty, or property.',
+  'welfare state':'A system where the government provides strong social protections like healthcare, unemployment benefits, and housing support.',
+  'free market':'An economic system where prices and production are determined by supply and demand, with minimal government interference.',
+  'populist':'A political approach that frames politics as a battle between ordinary people and a corrupt elite.',
+  'sovereignty':'A country\'s right to govern itself without interference from other nations or international bodies.',
+};
+function tip(word,def,align){const cls=align?`tip-box ${align}`:'tip-box';return`<span class="tip">${word}<span class="${cls}">${def}</span></span>`;}
+function tipG(word,align){return GLOSS[word.toLowerCase()]?tip(word,GLOSS[word.toLowerCase()],align):word;}
+
+// ══ STATE ══
+const SM=[2,1,0,-1,-2];
+const CC={"💰 Economic":"var(--econ)","🏛 Social":"var(--social)","⚖️ Civil Liberties":"var(--civil)","🌍 Governance":"var(--gov)","🔎 System Trust":"var(--system)"};
+let mode=null,qSet=[],cur=0,answers=[],cachedScores=null,hoverListenerAdded=false;
+
+function show(id){document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');window.scrollTo(0,0);}
+
+function goHome(){
+  const onLanding=document.getElementById('secLand').classList.contains('on');
+  if(onLanding)return;
+  showConfirm('Return to the home screen?','Your progress and results will be cleared.',function(){
+    mode=null;cur=0;answers=[];cachedScores=null;hoverListenerAdded=false;
+    document.getElementById('hdrProg').style.display='none';
+    document.getElementById('hdrTag').style.display='none';
+    document.getElementById('hdrBack').style.display='none';
+    show('secLand');
+  });
+}
+
+function showConfirm(title, body, onYes){
+  document.getElementById('confirmTitle').textContent=title;
+  document.getElementById('confirmBody').textContent=body;
+  document.getElementById('confirmOverlay').style.display='flex';
+  document.getElementById('confirmYes').onclick=function(){
+    document.getElementById('confirmOverlay').style.display='none';
+    onYes();
+  };
+  document.getElementById('confirmNo').onclick=function(){
+    document.getElementById('confirmOverlay').style.display='none';
+  };
+}
+function startMode(m){
+  mode=m;qSet=buildSet(m);cur=0;answers=new Array(qSet.length).fill(null);cachedScores=null;
+  const cfg=MODES[m];
+  document.getElementById('hdrProg').style.display='flex';
+  document.getElementById('hdrTag').textContent=cfg.label;
+  document.getElementById('hdrTag').style.display='flex';
+  document.getElementById('hdrTag').style.color=cfg.color;
+  document.getElementById('hdrBack').style.display='block';
+  show('secQ');renderQ();
+}
+function retake(){startMode(mode);}
+
+function renderQ(){
+  const q=qSet[cur];
+  document.getElementById('qText').textContent=q.t;
+  document.getElementById('qCat').textContent=q.a;
+  document.getElementById('qDot').style.background=CC[q.a]||'var(--accent)';
+  document.getElementById('qNum').textContent=`${cur+1} of ${qSet.length}`;
+  document.getElementById('hdrFill').style.width=((cur/qSet.length)*100)+'%';
+  document.getElementById('hdrCount').textContent=`${cur} / ${qSet.length}`;
+  document.getElementById('bbk').disabled=cur===0;
+  const nx=document.getElementById('bnx');
+  nx.disabled=answers[cur]===null;
+  nx.textContent=cur===qSet.length-1?'See My Results →':'Next →';
+  document.querySelectorAll('.sopt').forEach((o,i)=>o.classList.toggle('on',answers[cur]===i));
+}
+function ans(v){answers[cur]=v;document.querySelectorAll('.sopt').forEach((o,i)=>o.classList.toggle('on',i===v));document.getElementById('bnx').disabled=false;}
+function nextQ(){if(answers[cur]===null)return;if(cur===qSet.length-1){triggerReveal();return;}cur++;renderQ();}
+function prevQ(){if(cur>0){cur--;renderQ();}}
+
+function calcS(){
+  if(cachedScores)return cachedScores;
+  const raw={econ:0,social:0,civil:0,gov:0,system:0},cnt={econ:0,social:0,civil:0,gov:0,system:0};
+  qSet.forEach((q,i)=>{if(answers[i]!==null){raw[q.x]+=SM[answers[i]]*q.d;cnt[q.x]++;}});
+  const n={};for(const ax in raw){const m=cnt[ax]*2;n[ax]=m===0?0:Math.round((raw[ax]/m)*100);}
+  cachedScores=n;return n;
+}
+function idDist(s,is){return Math.sqrt(['econ','social','civil','gov','system'].reduce((sum,ax,i)=>sum+Math.pow(s[ax]-is[i],2),0));}
+function bestIdeo(s){return IDEO.slice().sort((a,b)=>idDist(s,a.s)-idDist(s,b.s))[0];}
+function figDist2d(s,fig){return Math.sqrt(Math.pow(s.econ-fig.e,2)+Math.pow(s.social-fig.s,2));}
+function getStrength(p){return p>=60?'Strongly':p>=35?'Moderately':p>=12?'Slightly':'';}
+
+const TAGLINES={
+  "Progressive Left":"Bold, systemic change — not just tweaks at the margins.",
+  "Social Democrat":"A fair society built through democratic means.",
+  "Classical Liberal":"Freedom first — for everyone, in every direction.",
+  "Libertarian":"Get the government out of your wallet and your bedroom.",
+  "Moderate Conservative":"Proven traditions, sensible markets, gradual change.",
+  "Social Conservative":"Strong communities, shared values, cultural continuity.",
+  "Nationalist Right":"Nation first. Sovereignty before globalism.",
+  "Authoritarian Left":"Radical equality — by any means necessary.",
+  "Left Populist":"The system is rigged — and it needs tearing down.",
+  "Right Populist":"Elites are out of touch. Ordinary people come first.",
+  "Technocrat":"Evidence, expertise, and institutions — not just rhetoric.",
+  "Moderate Left":"Lean left, stay practical. Progress without revolution.",
+  "Moderate Right":"Lean right, stay grounded. Markets, norms, stability.",
+};
+
+// ══ REVEAL ══
+function triggerReveal(){
+  document.getElementById('hdrFill').style.width='100%';
+  document.getElementById('hdrCount').textContent=`${qSet.length} / ${qSet.length}`;
+  const s=calcS(),best=bestIdeo(s);
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+
+  document.getElementById('revName').textContent=best.n;
+  document.getElementById('revTagline').textContent=TAGLINES[best.n]||'A complex picture that defies simple labels.';
+
+  // Build reveal axis rows — redesigned for maximum clarity
+  const axEl=document.getElementById('revAxes');axEl.innerHTML='';
+  ['econ','social','civil','gov','system'].forEach(ax=>{
+    const m=AXES[ax],v=s[ax],abs=Math.abs(v),str=getStrength(abs),isCenter=abs<8;
+    const color=isDark?m.cD:m.cL;
+    const isLeft=v<0;
+
+    // Plain English verdict label — no jargon, always crystal clear
+    let verdictMain, verdictSub;
+    if(isCenter){
+      verdictMain='Balanced / Center';
+      verdictSub='You fall roughly in the middle on this dimension';
+    } else {
+      verdictMain=`${str} ${isLeft?m.leftShort:m.rightShort}`;
+      verdictSub=`${abs}% toward ${isLeft?m.leftShort:m.rightShort}`;
+    }
+
+    // Bar: fill grows from center outward in the correct direction
+    const barLeft=isLeft?(50+v/2):50;
+    const barW=Math.max(abs/2,1);
+    const markerPct=50+v/2;
+
+    // Which end label to highlight
+    const leftClass=isLeft&&!isCenter?'rev-bar-end active-end':'rev-bar-end';
+    const rightClass=!isLeft&&!isCenter?'rev-bar-end right active-end':'rev-bar-end right';
+    const leftStyle=isLeft&&!isCenter?`style="color:${color}"`:'';
+    const rightStyle=!isLeft&&!isCenter?`style="color:${color}"`:'';
+
+    axEl.insertAdjacentHTML('beforeend',`
+      <div class="reveal-axis" id="revax-${ax}">
+        <div class="rev-axis-top">
+          <span class="rev-axis-icon">${m.icon}</span>
+          <span class="rev-axis-name">${m.label}</span>
+          <span class="rev-axis-chip" style="background:${color}20;color:${color};border:1px solid ${color}50">${verdictMain}</span>
+        </div>
+        <div class="rev-bar-wrap">
+          <span class="${leftClass}" ${leftStyle}>◄ ${m.leftShort}</span>
+          <div class="rev-bar-track">
+            <div class="rev-bar-center-line"></div>
+            <div class="rev-bar-fill" id="revfill-${ax}" style="background:${color};left:${barLeft}%;width:0%" data-w="${barW}%"></div>
+            <div class="rev-bar-marker" id="revmark-${ax}" style="background:${color};left:50%" data-left="${markerPct}%"></div>
+          </div>
+          <span class="${rightClass}" ${rightStyle}>${m.rightShort} ►</span>
+        </div>
+      </div>`);
+  });
+
+  show('secReveal');
+
+  const eyebrow=document.getElementById('revEyebrow');
+  const name=document.getElementById('revName');
+  const tagline=document.getElementById('revTagline');
+  const cta=document.getElementById('revCta');
+
+  function animIn(el,delay,extra={}){
+    setTimeout(()=>{
+      Object.assign(el.style,{transition:'opacity .55s ease, transform .55s cubic-bezier(.34,1.3,.64,1)',opacity:'1',transform:'translateY(0) scale(1)',...extra});
+    },delay);
+  }
+  animIn(eyebrow,200);
+  animIn(name,650);
+  animIn(tagline,1150);
+
+  ['econ','social','civil','gov','system'].forEach((ax,i)=>{
+    setTimeout(()=>{
+      const row=document.getElementById(`revax-${ax}`);
+      const fill=document.getElementById(`revfill-${ax}`);
+      const marker=document.getElementById(`revmark-${ax}`);
+      if(!row)return;
+      row.style.transition='opacity .4s ease, transform .4s ease';
+      row.style.opacity='1';row.style.transform='translateX(0)';
+      setTimeout(()=>{
+        fill.style.width=fill.dataset.w;
+        if(marker)marker.style.left=marker.dataset.left;
+      },80);
+    },1600+(i*320));
+  });
+
+  setTimeout(()=>{
+    cta.style.transition='opacity .5s ease, transform .5s ease';
+    cta.style.opacity='1';cta.style.transform='translateY(0)';
+  },1600+(5*320)+200);
+}
+
+function showFullResults(){
+  const s=calcS(),best=bestIdeo(s),cfg=MODES[mode];
+  document.getElementById('rIdeo').textContent=best.n;
+  document.getElementById('rIdeoDef').textContent=best.def;
+  document.getElementById('spId').textContent=best.n;
+  const tag=document.getElementById('rMtag');
+  tag.textContent=cfg.label;tag.style.background=cfg.bg;tag.style.color=cfg.color;tag.style.border=`1px solid ${cfg.color}`;
+  document.getElementById('rOneLiner').innerHTML=buildOneLiner(s);
+  show('secRes');
+  setTimeout(()=>{drawCompass(s);renderAxisCards(s);renderIdeo(s);renderCom(s);renderPills(s);renderFigSim(s);},60);
+}
+
+function buildOneLiner(s){
+  const e=s.econ<-20?tip('economically left-wing',GLOSS['left-wing']):s.econ>20?tip('economically right-wing',GLOSS['right-wing']):'economically centrist';
+  const so=s.social<-20?tip('socially libertarian',GLOSS['libertarian']):s.social>20?tip('socially authoritarian',GLOSS['authoritarian']):'socially moderate';
+  const tr=s.system>25?'you broadly trust democratic institutions':s.system<-25?'you\'re skeptical of mainstream institutions':'you have mixed trust in institutions';
+  const g=s.gov>25?`you lean ${tip('globalist',GLOSS['globalist'])} on foreign policy`:s.gov<-25?`you lean ${tip('nationalist',GLOSS['nationalist'])} on foreign policy`:'you balance national and global interests';
+  return `You are ${e} and ${so}, and ${tr}. ${g.charAt(0).toUpperCase()+g.slice(1)}.`;
+}
+
+// ══ COMPASS ══
+function drawCompass(s){
+  const canvas=document.getElementById('compassCanvas');
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height,pad=48,inner=W-pad*2;
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+
+  function px(e){return pad+((e+100)/200)*inner;}
+  function py(so){return pad+((so+100)/200)*inner;} // top=lib(-100), bottom=auth(+100)
+
+  ctx.clearRect(0,0,W,H);
+
+  // Quadrant backgrounds — py maps: top=libertarian(social -100), bottom=authoritarian(social +100)
+  const qData=[
+    {x:pad,y:pad,       w:inner/2,h:inner/2, label:"Libertarian Left",  c:isDark?'rgba(92,224,122,.07)':'rgba(30,156,80,.06)'},
+    {x:pad+inner/2,y:pad,w:inner/2,h:inner/2,label:"Libertarian Right", c:isDark?'rgba(232,197,71,.07)':'rgba(200,135,42,.06)'},
+    {x:pad,y:pad+inner/2,w:inner/2,h:inner/2,label:"Auth. Left",        c:isDark?'rgba(91,141,238,.07)':'rgba(40,96,200,.06)'},
+    {x:pad+inner/2,y:pad+inner/2,w:inner/2,h:inner/2,label:"Auth. Right",c:isDark?'rgba(224,92,92,.07)':'rgba(200,56,40,.06)'},
+  ];
+  qData.forEach(q=>{
+    ctx.fillStyle=q.c;ctx.fillRect(q.x,q.y,q.w,q.h);
+    ctx.fillStyle=isDark?'rgba(255,255,255,.15)':'rgba(0,0,0,.15)';
+    ctx.font='bold 12px Outfit,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(q.label,q.x+q.w/2,q.y+q.h/2);
+  });
+
+  // Border
+  ctx.strokeStyle=isDark?'rgba(255,255,255,.15)':'rgba(0,0,0,.15)';
+  ctx.lineWidth=1;ctx.strokeRect(pad,pad,inner,inner);
+
+  // Axes
+  ctx.strokeStyle=isDark?'rgba(255,255,255,.3)':'rgba(0,0,0,.25)';
+  ctx.lineWidth=1.5;
+  ctx.beginPath();ctx.moveTo(px(0),pad);ctx.lineTo(px(0),pad+inner);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(pad,py(0));ctx.lineTo(pad+inner,py(0));ctx.stroke();
+
+  // Axis edge labels
+  ctx.font='bold 11px Outfit,sans-serif';ctx.fillStyle=isDark?'rgba(255,255,255,.55)':'rgba(0,0,0,.5)';
+  ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillText('◄ Left',pad+inner/4,pad-14);
+  ctx.fillText('Right ►',pad+3*inner/4,pad-14);
+  // Vertical labels — top=libertarian, bottom=authoritarian
+  ctx.save();ctx.translate(pad-14,pad+inner/4);ctx.rotate(-Math.PI/2);ctx.fillText('▲ Libertarian',0,0);ctx.restore();
+  ctx.save();ctx.translate(pad-14,pad+3*inner/4);ctx.rotate(-Math.PI/2);ctx.fillText('Authoritarian ▼',0,0);ctx.restore();
+
+  // Figures
+  FIGURES.forEach(fig=>{
+    const fx=px(fig.e),fy=py(fig.s);
+    ctx.beginPath();ctx.arc(fx,fy,5,0,Math.PI*2);
+    ctx.fillStyle=fig.c+'cc';ctx.fill();
+    ctx.strokeStyle=fig.c;ctx.lineWidth=1.5;ctx.stroke();
+  });
+
+  // YOUR dot — drawn last so always on top
+  const ux=px(s.econ),uy=py(s.social);
+  const grd=ctx.createRadialGradient(ux,uy,0,ux,uy,24);
+  grd.addColorStop(0,isDark?'rgba(232,197,71,.4)':'rgba(200,135,42,.35)');
+  grd.addColorStop(1,'transparent');
+  ctx.beginPath();ctx.arc(ux,uy,24,0,Math.PI*2);ctx.fillStyle=grd;ctx.fill();
+  ctx.beginPath();ctx.arc(ux,uy,10,0,Math.PI*2);
+  ctx.fillStyle=isDark?'#e8c547':'#c8872a';ctx.fill();
+  ctx.strokeStyle='#fff';ctx.lineWidth=2.5;ctx.stroke();
+  ctx.fillStyle=isDark?'#e8c547':'#c8872a';
+  ctx.font='bold 12px Outfit,sans-serif';ctx.textAlign='center';ctx.textBaseline='bottom';
+  ctx.fillText('YOU',ux,uy-14);
+
+  // Setup hover
+  setupCompassHover(s);
+
+  // Show coordinates
+  const econDir=s.econ>=0?'R':'L';
+  const socialDir=s.social>=0?'Auth':'Lib';
+  document.getElementById('coordText').textContent=`Economic ${econDir}${Math.abs(s.econ)}, Social ${socialDir}${Math.abs(s.social)}`;
+  document.getElementById('compassCoords').style.display='block';
+}
+
+function setupCompassHover(s){
+  if(hoverListenerAdded)return;
+  hoverListenerAdded=true;
+  const canvas=document.getElementById('compassCanvas');
+  const tipEl=document.getElementById('compassTip');
+  const pad=48,inner=canvas.width-pad*2;
+  function px(e){return pad+((e+100)/200)*inner;}
+  function py(so){return pad+((so+100)/200)*inner;}
+
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
+    const cx=(e.clientX-rect.left)*scaleX,cy=(e.clientY-rect.top)*scaleY;
+    let found=null;
+    // check user dot first
+    const ux=px(s.econ),uy=py(s.social);
+    if(Math.sqrt((cx-ux)**2+(cy-uy)**2)<16){found={n:'You',desc:'Your position'};}
+    if(!found){
+      for(const fig of FIGURES){
+        if(Math.sqrt((cx-px(fig.e))**2+(cy-py(fig.s))**2)<12){found=fig;break;}
+      }
+    }
+    if(found){
+      tipEl.innerHTML=`<strong>${found.n}</strong>${found.desc?'<br><span style="font-weight:400;color:var(--muted)">'+found.desc+'</span>':''}`;
+      tipEl.style.display='block';
+      tipEl.style.left=(e.clientX+14)+'px';
+      tipEl.style.top=(e.clientY-8)+'px';
+    } else {
+      tipEl.style.display='none';
+    }
+  });
+  canvas.addEventListener('mouseleave',()=>{tipEl.style.display='none';});
+}
+
+// ══ SIMILAR FIGURES TABLE ══
+function renderFigSim(s){
+  const el=document.getElementById('figSimList');el.innerHTML='';
+  const sorted=FIGURES.map(f=>({...f,d:figDist2d(s,f)})).sort((a,b)=>a.d-b.d);
+  // show top 6 closest
+  sorted.slice(0,6).forEach((fig,i)=>{
+    const sim=Math.round(Math.max(0,(1-(fig.d/200))*100));
+    const you=i===0;
+    el.insertAdjacentHTML('beforeend',`
+      <div class="fig-sim-row${you?' fig-sim-you':''}">
+        <div class="fig-sim-dot" style="background:${fig.c}"></div>
+        <div style="flex:1">
+          <div class="fig-sim-name">${fig.n} ${you?'<span style="font-size:.65rem;background:var(--accent-bg);color:var(--accent);padding:2px 7px;border-radius:8px;font-weight:700">Closest</span>':''}</div>
+          <div style="font-size:.72rem;color:var(--muted)">${fig.desc}</div>
+        </div>
+        <div class="fig-sim-pct">${sim}% similar</div>
+      </div>`);
+  });
+}
+
+// ══ AXIS CARDS (redesigned) ══
+function renderAxisCards(s){
+  const el=document.getElementById('axisCards');el.innerHTML='';
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  ['econ','social','civil','gov','system'].forEach(ax=>{
+    const m=AXES[ax],v=s[ax],abs=Math.abs(v),str=getStrength(abs),isCenter=abs<8;
+    const color=isDark?m.cD:m.cL;
+    const isLeft=v<0;
+    const dirLabel=isCenter?'Center / Mixed':`${str?str+' ':''}${isLeft?m.leftShort:m.rightShort} (${abs}%)`;
+    const verdict=isCenter?m.centerDef:isLeft?m.leftDef:m.rightDef;
+    const arrowIcon=isCenter?'⟷':isLeft?'◄':' ►';
+    const barLeft=v>=0?50:(50+v/2),barW=Math.max(abs/2,1);
+    const markerLeft=50+v/2; // marker position as % of track
+
+    // Which end label is "active" (highlighted)
+    const leftActive=isLeft&&!isCenter,rightActive=!isLeft&&!isCenter;
+
+    el.insertAdjacentHTML('beforeend',`
+      <div class="axis-card">
+        <div class="axis-card-header">
+          <span class="axis-card-icon">${m.icon}</span>
+          <span class="axis-card-title">${m.label}</span>
+          <div class="axis-card-score">
+            <span class="axis-score-arrow" style="color:${color}">${arrowIcon}</span>
+            <span style="color:${color}">${dirLabel}</span>
+          </div>
+        </div>
+        <div class="axis-bar-section">
+          <div class="axis-bar-end-labels">
+            <span class="axis-end-label${leftActive?' active':''}" style="${leftActive?'color:'+color:''}">◄ ${m.leftShort}</span>
+            <span style="font-size:.65rem;color:var(--muted2)">CENTER</span>
+            <span class="axis-end-label${rightActive?' active':''}" style="${rightActive?'color:'+color:''}"> ${m.rightShort} ►</span>
+          </div>
+          <div class="axis-bar-track">
+            <div class="axis-bar-mid"></div>
+            <div class="axis-bar-fill" style="background:${color};left:${barLeft}%;width:0%" data-w="${barW}%"></div>
+            <div class="axis-bar-marker" style="background:${color};left:50%" data-left="${markerLeft}%"></div>
+          </div>
+        </div>
+        <div class="axis-what">${m.what}</div>
+        <div class="axis-verdict"><strong>Your result:</strong> ${verdict}</div>
+      </div>`);
+  });
+  setTimeout(()=>{
+    document.querySelectorAll('.axis-bar-fill').forEach(b=>b.style.width=b.dataset.w);
+    document.querySelectorAll('.axis-bar-marker').forEach(m=>m.style.left=m.dataset.left);
+  },80);
+}
+
+// ══ IDEOLOGY LIST ══
+function renderIdeo(s){
+  const el=document.getElementById('idList');el.innerHTML='';
+  IDEO.map(id=>({...id,d:idDist(s,id.s)})).sort((a,b)=>a.d-b.d).slice(0,5).forEach((id,i)=>{
+    const match=Math.round(Math.max(0,(1-id.d/400)*100)),you=i===0;
+    el.insertAdjacentHTML('beforeend',`
+      <div class="idrow${you?' you':''}">
+        <div class="iddot" style="background:${id.c}"></div>
+        <span class="idnm">${tip(id.n,id.def)}</span>
+        ${you?`<span class="idmb" style="background:var(--accent-bg);color:var(--accent)">Closest match</span>`:''}
+        <span class="idpct">${match}% match</span>
+      </div>`);
+  });
+}
+
+// ══ COMMUNITY ══
+function renderCom(s){
+  const ml=Math.round(Math.max(0,Math.min(99,50-s.econ*.4)));
+  document.getElementById('cPct').textContent=ml+'%';
+  document.getElementById('cRight').textContent=(100-ml)+'%';
+  const sorted=COU.map(c=>({...c,d:Math.sqrt(['econ','social','civil','gov','system'].reduce((sum,ax,i)=>sum+Math.pow(s[ax]-c.s[i],2),0))})).sort((a,b)=>a.d-b.d);
+  document.getElementById('cClose').textContent=sorted[0].f+' '+sorted[0].n;
+  const tbl=document.getElementById('cTbl');
+  tbl.innerHTML=`<tr><th>Country</th><th>Econ.</th><th>Social</th><th>Similarity</th></tr>
+    <tr class="yrow"><td>⭐ You</td><td style="color:var(--econ)">${s.econ>0?'+':''}${s.econ}</td><td style="color:var(--social)">${s.social>0?'+':''}${s.social}</td><td>—</td></tr>`;
+  sorted.slice(0,8).forEach(c=>{
+    const sim=Math.round(Math.max(0,(1-c.d/400)*100));
+    tbl.insertAdjacentHTML('beforeend',`
+      <tr>
+        <td><span class="cflag">${c.f}</span><span class="cnm">${c.n}</span></td>
+        <td><div class="mb"><div class="mbf" style="background:var(--econ);width:${50+c.s[0]/2}%"></div></div></td>
+        <td><div class="mb"><div class="mbf" style="background:var(--social);width:${50+c.s[1]/2}%"></div></div></td>
+        <td style="color:${sim>60?'var(--civil)':sim>40?'var(--accent)':'var(--muted)'};font-weight:${sim>60?700:400}">${sim}%</td>
+      </tr>`);
+  });
+}
+
+// ══ SHARE PILLS ══
+function renderPills(s){
+  const el=document.getElementById('spPills');el.innerHTML='';
+  const isDark=document.documentElement.getAttribute('data-theme')==='dark';
+  ['econ','social','civil','gov','system'].forEach(ax=>{
+    const m=AXES[ax],v=s[ax],lbl=v>=0?m.rightShort:m.leftShort,pct=Math.abs(v);
+    if(pct<10)return;
+    const c=isDark?m.cD:m.cL;
+    el.insertAdjacentHTML('beforeend',`<div class="sppill" style="background:${c}18;border-color:${c}50;color:${c}">${m.icon} ${m.label}: ${pct}% ${lbl}</div>`);
+  });
+}
+
+function copyRes(){
+  const s=calcS(),best=bestIdeo(s);
+  const txt=`My Political Compass Results\nTest: ${MODES[mode].label}\nClosest Ideology: ${best.n}\n\n${best.def}\n\n`+
+    Object.entries(s).map(([ax,v])=>{const m=AXES[ax];return`${m.icon} ${m.label}: ${Math.abs(v)}% ${v>=0?m.rightShort:m.leftShort}`;}).join('\n');
+  navigator.clipboard.writeText(txt).then(()=>{
+    const btn=document.querySelector('.sbtn');
+    const orig=btn.innerHTML;
+    btn.innerHTML='✓ Copied!';
+    btn.style.color='var(--civil)';
+    btn.style.borderColor='var(--civil)';
+    setTimeout(()=>{btn.innerHTML=orig;btn.style.color='';btn.style.borderColor='';},2000);
+  }).catch(()=>{
+    // fallback: select a temp textarea
+    const ta=document.createElement('textarea');
+    ta.value=txt;document.body.appendChild(ta);ta.select();
+    document.execCommand('copy');document.body.removeChild(ta);
+  });
+}
+function shareTw(){
+  const s=calcS(),best=bestIdeo(s);
+  const txt=encodeURIComponent(`I took a political compass test — my closest ideology: ${best.n}\n\n${TAGLINES[best.n]||''}`);
+  window.open(`https://twitter.com/intent/tweet?text=${txt}`,'_blank');
+}
+</script>
+</body>
+</html>
